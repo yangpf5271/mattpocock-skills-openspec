@@ -26,6 +26,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/` — does this skill's prior output already exist?
 - `.scratch/` — sign that a local-markdown issue tracker convention is already in use
+- `openspec/config.yaml` (and `openspec/changes/`, `openspec/specs/`) — is an OpenSpec instance already initialized? Is the `openspec` CLI on PATH (`openspec --version`)?
 - Is the `triage` skill installed? (a `triage` skill folder alongside this one, or `triage` in your available skills.) This decides whether Section B runs at all.
 - Monorepo signals — a `pnpm-workspace.yaml`, a `workspaces` field in `package.json`, or a populated `packages/*` with its own `src/`. Present only in a genuinely large multi-package repo; their absence means single-context, which is almost every repo.
 
@@ -60,12 +61,31 @@ The defaults are the five canonical roles, each label string equal to its name: 
 
 Offer **multi-context** — a root `CONTEXT-MAP.md` pointing to per-context `CONTEXT.md` files — only when exploration found monorepo signals. Then confirm which layout they want.
 
+**Section D — OpenSpec.** This section only runs when `/to-proposal` (or `/archive-proposal`) is among the installed skills — it has nothing to configure otherwise. Skip it entirely if neither is installed.
+
+> Explainer: OpenSpec is an optional **in-repo source of truth** for change proposals and evolving specs. `/to-spec` publishes to the issue tracker; `/to-proposal` instead sinks the same thinking into `openspec/changes/<name>/`, and `/archive-proposal` later merges each finished change's delta into `openspec/specs/`. This section just records where that instance lives and makes sure it's usable.
+
+Three checks, in order — stop at the first that fails and tell the user how to fix it:
+
+1. **CLI present?** Run `openspec --version`. If missing, propose installing it and stop:
+   ```bash
+   npm install -g @fission-ai/openspec
+   ```
+   Re-check after they install.
+2. **Instance initialized?** Look for `openspec/config.yaml`. If absent, propose initializing at the repo root and stop — **with `--tools none`**, so OpenSpec doesn't install its own `.claude/` skills (which would clash with this repo's plugin/`link-skills.sh` layout):
+   ```bash
+   openspec init --tools none
+   ```
+3. **Project context filled?** Open `openspec/config.yaml`. If its `context:` is still empty/commented, offer to seed it with the tech stack you found in Section C's exploration. Let the user edit before writing.
+
+On success, record the instance root (default `openspec/` at the repo root) in `docs/agents/openspec-instance.md`.
+
 ### 3. Confirm and edit
 
 Show the user a draft of:
 
 - The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 4 for selection rules)
-- The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md` (the last only when `triage` is installed)
+- The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md` (the last only when `triage` is installed), and `docs/agents/openspec-instance.md` (only when `/to-proposal` is installed)
 
 Let them edit before writing.
 
@@ -97,9 +117,15 @@ The block:
 ### Domain docs
 
 [one-line summary of layout — "single-context" or "multi-context"]. See `docs/agents/domain.md`.
+
+### OpenSpec
+
+[one-line summary — e.g. "In-repo change proposals/specs via OpenSpec at `openspec/`"]. See `docs/agents/openspec-instance.md`.
 ```
 
 Include the `### Triage labels` sub-block, and write `docs/agents/triage-labels.md`, only when `triage` is installed and Section B ran. When it isn't, both are omitted.
+
+Include the `### OpenSpec` sub-block, and write `docs/agents/openspec-instance.md`, only when `/to-proposal` (or `/archive-proposal`) is installed and Section D ran. When neither is, both are omitted.
 
 Then write the docs files using the seed templates in this skill folder as a starting point:
 
@@ -108,6 +134,7 @@ Then write the docs files using the seed templates in this skill folder as a sta
 - [issue-tracker-local.md](./issue-tracker-local.md) — local-markdown issue tracker
 - [triage-labels.md](./triage-labels.md) — label mapping (only if `triage` is installed)
 - [domain.md](./domain.md) — domain doc consumer rules + layout
+- [openspec-instance.md](./openspec-instance.md) — OpenSpec instance location + lifecycle (only if `/to-proposal` is installed)
 
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
 

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Archive Proposal"
+  short_description: "Finalize an OpenSpec change and file it in the archive"
+policy:
+  allow_implicit_invocation: false

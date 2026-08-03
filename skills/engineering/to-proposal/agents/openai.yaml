@@ -1,0 +1,5 @@
+interface:
+  display_name: "To Proposal"
+  short_description: "Sink the conversation into an OpenSpec change proposal"
+policy:
+  allow_implicit_invocation: false
