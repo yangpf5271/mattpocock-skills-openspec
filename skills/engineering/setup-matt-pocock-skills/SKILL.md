@@ -65,14 +65,14 @@ Offer **multi-context** — a root `CONTEXT-MAP.md` pointing to per-context `CON
 
 > Explainer: OpenSpec is an optional **in-repo source of truth** for change proposals and evolving specs. `/to-spec` publishes to the issue tracker; `/to-proposal` instead sinks the same thinking into `openspec/changes/<name>/`, and `/archive-proposal` later merges each finished change's delta into `openspec/specs/`. This section just records where that instance lives and makes sure it's usable.
 
-Three checks, in order — stop at the first that fails and tell the user how to fix it:
+Three checks, in order. For the install/init steps, **confirm with the user via the AskUserQuestion tool, then run the command yourself** — the user should never have to remember the `--tools none` flag (it's load-bearing: without it, OpenSpec installs its own `.claude/` skills and clashes with this repo's plugin layout). These skills target OpenSpec 1.2.0+ command behaviour, so install the latest stable — no version pin.
 
-1. **CLI present?** Run `openspec --version`. If missing, propose installing it and stop:
+1. **CLI present?** Run `openspec --version`. If missing, ask the user to confirm installing it, then run:
    ```bash
    npm install -g @fission-ai/openspec
    ```
-   Re-check after they install.
-2. **Instance initialized?** Look for `openspec/config.yaml`. If absent, propose initializing at the repo root and stop — **with `--tools none`**, so OpenSpec doesn't install its own `.claude/` skills (which would clash with this repo's plugin/`link-skills.sh` layout):
+   Re-check `openspec --version` after installing.
+2. **Instance initialized?** Look for `openspec/config.yaml`. If absent, ask the user to confirm initializing at the repo root, then run — **always with `--tools none`**:
    ```bash
    openspec init --tools none
    ```
