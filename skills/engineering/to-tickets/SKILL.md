@@ -39,7 +39,7 @@ If this **is** an OpenSpec flow, start from `openspec/changes/<name>/tasks.md` i
 - Add **Blocked by** edges from the ordering and the actual dependency logic; don't assume every earlier group blocks every later group.
 - If a group already has a `**Ticket:** <url-or-path>` line, do not create a duplicate ticket. Plan to update the existing ticket if needed, or skip it if it is already correct.
 
-Only split, merge, or reorder OpenSpec groups when the existing `tasks.md` is not a valid ticket-sized vertical-slice plan, or when the user approves the change during the quiz. When you do change slice boundaries, update `tasks.md` first, preserving any completed `- [x]` items and existing ticket links that still apply; then publish from the updated groups.
+Only split, merge, reorder, add, or remove OpenSpec checkbox items when the existing `tasks.md` is not a valid ticket-sized vertical-slice plan, when it is missing required work that belongs in the OpenSpec archive record, or when the user approves the change during the quiz. Treat this as a revision to the OpenSpec implementation checklist, not as ordinary ticket backlinking. When you do change checklist boundaries or checkbox items, update `tasks.md` first, preserving any completed `- [x]` items and existing ticket links that still apply; then publish from the updated groups.
 
 <vertical-slice-rules>
 
@@ -126,9 +126,10 @@ Skip this step entirely if this flow has no OpenSpec change — i.e. no `openspe
 If an OpenSpec change exists, `tasks.md` remains the OpenSpec checklist. It does not become the tracker, but it should carry a lightweight backlink so future runs and `/implement` can map a checklist group to its ticket:
 
 1. For each successfully published or reused ticket, add or update a plain non-checkbox line under the matching `## N.` group, e.g. `**Ticket:** <url-or-local-path>`.
-2. Do not change checkbox text or reset completion state. Preserve every `- [x]` as complete.
-3. Do not create duplicate tickets for groups that already have a `**Ticket:**` link. Update the existing ticket if its ticket-specific fields are stale, or skip it if it already matches.
-4. Keep the format OpenSpec's apply/archive parses: numbered `## N.` headings, every task an exact `- [ ]` or `- [x]` checkbox. Ticket links must stay on plain non-checkbox lines.
-5. Verify with `openspec status --change "<name>"` that the change is still apply-ready (all artifacts `done`).
+2. Ordinary backlinking must not add, remove, split, merge, reorder, or rewrite checkbox items. If a ticket exposes missing required work that belongs in the OpenSpec archive record, revise `tasks.md` deliberately before publishing/updating tickets, preserve completed `- [x]` state, and re-run OpenSpec status/validation afterward.
+3. Do not change checkbox text or reset completion state during ordinary backlinking. Preserve every `- [x]` as complete.
+4. Do not create duplicate tickets for groups that already have a `**Ticket:**` link. Update the existing ticket if its ticket-specific fields are stale, or skip it if it already matches.
+5. Keep the format OpenSpec's apply/archive parses: numbered `## N.` headings, every task an exact `- [ ]` or `- [x]` checkbox. Ticket links must stay on plain non-checkbox lines.
+6. Verify with `openspec status --change "<name>"` that the change is still apply-ready (all artifacts `done`). Run `openspec validate "<name>" --strict` too if the checklist was revised, not merely backlinked.
 
 Because `tasks.md` is the OpenSpec checklist and tickets are the collaboration surface, `/implement` works in two modes: when tickets exist, drive ticket state on the tracker and then check off the corresponding `tasks.md` lines; when tickets do not exist, work directly from `tasks.md` and check it off as the implementation lands. `openspec archive` reads **only** `tasks.md` for completion, so the checklist must stay accurate in both modes.
