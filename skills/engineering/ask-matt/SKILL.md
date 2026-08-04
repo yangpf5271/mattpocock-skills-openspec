@@ -22,14 +22,14 @@ The route most work travels. You have an idea and want it built.
 3. **Branch — is this a multi-session build?**
    - **Yes** → **`/to-spec`** (turn the thread into a spec), then **`/to-tickets`** to split it into tracer-bullet tickets, each declaring its **blocking edges**. On a local tracker that's one file per ticket under `.scratch/<feature>/issues/`, worked blockers-first by hand; on a real tracker the edges become native blocking links, so any ticket whose blockers are done can be grabbed — kick off **`/implement`** per ticket, **clearing context between each one**.
 
-     Want the spec to live **in the repo as an evolving source of truth**, not just on the tracker? After (or instead of) `/to-spec`, run **`/to-proposal`** — it sinks the same thinking into an OpenSpec change at `openspec/changes/<name>/` (proposal, design, delta specs, a draft `tasks.md`). **`/to-tickets` is still the task-breaking authority**: its real breakdown rewrites the change's `tasks.md` to mirror the tickets. Implement the tasks (via `/implement` — **the ticket is the main task flow, `tasks.md` its record**: drive ticket state on the tracker, then check the matching `tasks.md` lines off), then **`/archive-proposal`** delegates the merge-and-file to `openspec archive`, syncing the change's delta into `openspec/specs/` and filing the change under `openspec/changes/archive/`. See **Spec lifecycle** below for why this loop matters.
+     Want the spec to live **in the repo as an evolving source of truth**, not just on the tracker? After (or instead of) `/to-spec`, run **`/to-proposal`** — it sinks the same thinking into an OpenSpec change at `openspec/changes/<name>/` (proposal, design, delta specs, and an OpenSpec `tasks.md` checklist of vertical slices). For lightweight work, `/implement` can work that checklist directly. When you need tracker tickets, run **`/to-tickets`**: it promotes each `tasks.md` group into a ticket by adding tracker-specific fields (Blocked by, status/label, tracker identity) and links the ticket back to the checklist. Implement the tasks (via `/implement` — with tickets, drive ticket state first and then check the matching `tasks.md` lines; without tickets, work directly from `tasks.md`), then **`/archive-proposal`** delegates the merge-and-file to `openspec archive`, syncing the change's delta into `openspec/specs/` and filing the change under `openspec/changes/archive/`. See **Spec lifecycle** below for why this loop matters.
    - **No** → **`/implement`** right here, in the same context window.
 
    Either way, **`/implement`** builds each issue by driving **`/tdd`** internally — one red-green slice at a time — then closes out by running **`/code-review`**, a two-axis review (Standards + Spec) of the diff, before committing. Reach for **`/tdd`** on its own when you just want to build a concrete behaviour test-first without a full spec, and **`/code-review`** on its own whenever you want to review a branch or PR against a fixed point.
 
 ### Context hygiene
 
-Keep steps 1–3 in **one unbroken context window** — don't compact or clear until after `/to-tickets` — so the grilling, spec, and tickets all build on the same thinking. Each `/implement` then starts fresh, working from the ticket.
+Keep steps 1–3 in **one unbroken context window** — don't compact or clear until after `/to-tickets`, or after `/to-proposal` if you're taking the lightweight OpenSpec path straight to `/implement` — so the grilling, spec, and ticket/checklist boundary all build on the same thinking. Each `/implement` then starts fresh, working from the ticket or the OpenSpec checklist.
 
 The limit on this is the **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**: the window (~120k tokens on state-of-the-art models) within which the model still reasons sharply. If a session approaches it before `/to-tickets`, don't push on degraded — `/handoff` and continue in a fresh thread.
 
@@ -80,19 +80,27 @@ Off the main flow entirely.
 An **optional** loop layered on the main flow for projects that want their specs to live **in the repo** and **evolve across changes**, rather than living only on the issue tracker. It needs the OpenSpec CLI and an instance initialized by `/setup-matt-pocock-skills` (see Precondition).
 
 ```
+Lightweight OpenSpec:
+/to-spec ──▶ /to-proposal ──▶ /implement ──▶ /archive-proposal
+(thread)     openspec/         (work/check     openspec archive:
+             changes/<name>/    tasks.md)      merge delta into
+             proposal+design+                  openspec/specs/,
+             delta specs+                     file under archive/
+             tasks.md checklist)
+
+Ticketed OpenSpec:
 /to-spec ──▶ /to-proposal ──▶ /to-tickets ──▶ /implement ──▶ /archive-proposal
-(thread)     openspec/         (rewrite        (check off       openspec archive:
-             changes/<name>/    tasks.md        tasks.md)        merge delta into
-             proposal+design+   to mirror                        openspec/specs/,
-             delta specs+       the tickets)                     file under archive/
-             draft tasks.md)
+                           (promote tasks.md   (drive ticket,
+                            groups into         then check
+                            tracker tickets;    tasks.md)
+                            write backlinks)
 ```
 
-- **`/to-proposal`** — takes the grilling/spec thread and writes it into `openspec/changes/<name>/` as `proposal.md` + `design.md` + delta `specs/<capability>/spec.md` + a **draft** `tasks.md` (vertical slices, the plan of record). Same synthesis job as `/to-spec`, but the output is the repo, not the tracker — so the spec becomes auditable in version control alongside the code.
-- **`/to-tickets`** — still the task-breaking authority: it produces the real tracer-bullet breakdown, then **rewrites the change's `tasks.md` to mirror the tickets 1:1** (one `## N.` group per ticket, aligned numbering). OpenSpec is the archive — it records the real breakdown, it doesn't invent its own.
+- **`/to-proposal`** — takes the grilling/spec thread and writes it into `openspec/changes/<name>/` as `proposal.md` + `design.md` + delta `specs/<capability>/spec.md` + an OpenSpec `tasks.md` checklist. The checklist is vertical slices grouped under `## N.` headings with checkbox acceptance/completion items. Same synthesis job as `/to-spec`, but the output is the repo, not the tracker — so the spec becomes auditable in version control alongside the code.
+- **`/to-tickets`** — optional in the OpenSpec loop: use it when the checklist needs tracker tickets for collaboration, blocking edges, assignment, or one-ticket-per-context implementation. It reads `tasks.md`, treats each vertical group as a ticket candidate, adds ticket-specific fields, publishes to the tracker, and writes a plain `**Ticket:** ...` backlink under the matching group. It only changes `tasks.md` boundaries when the checklist is not ticket-sized or the user approves split/merge.
 - **`/archive-proposal`** — once the tasks are done, pre-flights completion, gets your go-ahead, then **delegates to `openspec archive`**: the CLI syncs the change's delta into the main `openspec/specs/` (ADDED appended, MODIFIED replaced in full, REMOVED dropped) and moves the change to `openspec/changes/archive/YYYY-MM-DD-<name>/`. The merge rules are OpenSpec's, never re-implemented by hand.
 
-Why bother when `/to-spec` + `/to-tickets` already work? Because the **next** change then builds on specs that already reflect the last one — `/to-proposal` reads the current `openspec/specs/` as its baseline, so each proposal is a delta against living truth, not a rewrite from scratch. Reach for this loop on projects where the spec is long-lived and many changes stack; skip it for one-off work the tracker already captures.
+Why bother when `/to-spec` + `/to-tickets` already work? Because the **next** change then builds on specs that already reflect the last one — `/to-proposal` reads the current `openspec/specs/` as its baseline, so each proposal is a delta against living truth, not a rewrite from scratch. Reach for this loop on projects where the spec is long-lived and many changes stack; skip it for one-off work the tracker already captures. Within the loop, `/to-tickets` is optional: skip it for lightweight solo implementation from `tasks.md`, use it when the work needs tracker-native collaboration.
 
 ## Precondition
 

@@ -30,7 +30,12 @@ Around that core it keeps the loop tight — typecheck often, run single test fi
 
 ## Tracking progress in an OpenSpec flow
 
-In a Matt+OpenSpec flow, **the ticket is the main task flow and OpenSpec is the record**: the tracker is where ticket state is really driven, and `tasks.md` mirrors the tickets 1:1 (see [to-tickets](https://aihero.dev/skills-to-tickets) step 6). The working order is: drive the ticket state on the tracker, then check the corresponding `- [ ]` off in `openspec/changes/<name>/tasks.md`. Since `openspec archive` reads only `tasks.md` for completion, keeping it in lockstep with the tickets is what lets a finished change archive cleanly. When the last task is checked, the change is ready for [archive-proposal](https://aihero.dev/skills-archive-proposal).
+In a Matt+OpenSpec flow, `tasks.md` is the OpenSpec implementation checklist and archive record. There are two valid modes:
+
+- **With tracker tickets** — [to-tickets](https://aihero.dev/skills-to-tickets) promoted the checklist groups into tickets. Drive ticket state on the tracker first, then check off the matching `- [ ]` lines in `openspec/changes/<name>/tasks.md`.
+- **Without tracker tickets** — lightweight OpenSpec flow. Work directly from `tasks.md`, implement the vertical slices in order, and check each item off as it lands.
+
+`openspec archive` reads only `tasks.md` for completion, so keeping that checklist accurate is what lets a finished change archive cleanly. When the last task is checked, the change is ready for [archive-proposal](https://aihero.dev/skills-archive-proposal).
 
 ## Where it fits
 
@@ -40,10 +45,11 @@ In a Matt+OpenSpec flow, **the ticket is the main task flow and OpenSpec is the 
 grill-with-docs → to-spec → to-tickets → implement → code-review
 ```
 
-With OpenSpec in the loop, implementation sits between `to-tickets` (which rewrote `tasks.md` to mirror the tickets) and `archive-proposal`:
+With OpenSpec in the loop, implementation can either follow `to-proposal` directly from `tasks.md`, or sit after `to-tickets` when those checklist groups have been promoted to tracker tickets:
 
 ```txt
-grill-with-docs → to-spec → to-proposal → to-tickets → implement → archive-proposal
+grill-with-docs → to-spec → to-proposal ──┬─→ implement → archive-proposal
+                                     └─→ to-tickets → implement → archive-proposal
 ```
 
 Reach for it after the work has been specced and sequenced, not before. Its key neighbours are [to-tickets](https://aihero.dev/skills-to-tickets), which produces the tickets — each declaring its blocking edges — that it works through, and [tdd](https://aihero.dev/skills-tdd), which it drives internally to write the tests at each seam before running its own [code-review](https://aihero.dev/skills-code-review) pass and committing. When you're unsure which skill or flow fits, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.

@@ -10,7 +10,7 @@ Break a plan, spec, or conversation into a set of **tickets** — tracer-bullet 
 
 The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not.
 
-When this flow runs with OpenSpec (`/to-proposal` produced an OpenSpec change at `openspec/changes/<name>/`), the tickets you break down here are the **task-breaking authority**: after publishing, rewrite the change's `tasks.md` to mirror the tickets 1:1 (see Step 6). OpenSpec is the archive — it records the real breakdown, it doesn't invent its own.
+When this flow runs with OpenSpec (`/to-proposal` produced an OpenSpec change at `openspec/changes/<name>/`), `tasks.md` remains the OpenSpec implementation checklist. Treat each vertical `## N.` group as a ticket candidate: `/to-tickets` promotes those groups into tracker tickets by adding ticket-specific parameters (What to build, Blocked by, status/label, tracker identity) and linking the published tickets back. OpenSpec is still the archive; the tracker is the collaboration surface.
 
 ## Process
 
@@ -18,15 +18,28 @@ When this flow runs with OpenSpec (`/to-proposal` produced an OpenSpec change at
 
 Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments.
 
+If an OpenSpec change exists (`openspec/changes/<name>/`), read its `proposal.md`, `design.md`, delta `specs/`, and `tasks.md` before drafting anything. `tasks.md` is the OpenSpec checklist: parse each `## N.` group as one ticket candidate, with its `- [ ]` checkbox lines as the candidate acceptance criteria. Keep any existing plain-text ticket link lines (for example `**Ticket:** ...`) — they are rerun protection.
+
 ### 2. Explore the codebase (optional)
 
 If you have not already explored the codebase, do so to understand the current state of the code. Ticket titles and descriptions should use the project's domain glossary vocabulary, and respect ADRs in the area you're touching.
 
 Look for opportunities to prefactor the code to make the implementation easier. "Make the change easy, then make the easy change."
 
-### 3. Draft vertical slices
+### 3. Draft or promote vertical slices
 
-Break the work into **tracer bullet** tickets.
+If this is **not** an OpenSpec flow, break the work into **tracer bullet** tickets.
+
+If this **is** an OpenSpec flow, start from `openspec/changes/<name>/tasks.md` instead of re-breaking from scratch:
+
+- Treat each numbered `## N.` group as one ticket candidate.
+- Treat each `- [ ]` checkbox in that group as an acceptance criterion.
+- Derive the ticket title from the group heading.
+- Derive **What to build** from the group heading, its checkbox criteria, and the proposal/design context.
+- Add **Blocked by** edges from the ordering and the actual dependency logic; don't assume every earlier group blocks every later group.
+- If a group already has a `**Ticket:** <url-or-path>` line, do not create a duplicate ticket. Plan to update the existing ticket if needed, or skip it if it is already correct.
+
+Only split, merge, or reorder OpenSpec groups when the existing `tasks.md` is not a valid ticket-sized vertical-slice plan, or when the user approves the change during the quiz. When you do change slice boundaries, update `tasks.md` first, preserving any completed `- [x]` items and existing ticket links that still apply; then publish from the updated groups.
 
 <vertical-slice-rules>
 
@@ -57,12 +70,12 @@ Ask the user:
 
 Iterate until the user approves the breakdown.
 
-### 5. Publish the tickets to the configured tracker
+### 5. Publish, update, or reuse the tickets on the configured tracker
 
-Publish the approved tickets. **How** depends on the tracker `/setup-matt-pocock-skills` configured — the tickets are the same either way, only the shape of the blocking edges changes:
+Publish the approved tickets, or update/reuse existing linked tickets when this is an OpenSpec rerun. **How** depends on the tracker `/setup-matt-pocock-skills` configured — the tickets are the same either way, only the shape of the blocking edges changes:
 
-- **Local files** → write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-ticket file template below — one ticket per file, never a single combined file.
-- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the `ready-for-agent` triage label unless instructed otherwise — the tickets are agent-grabbable by construction.
+- **Local files** → write one file per new ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). If the matching OpenSpec group already has a `**Ticket:**` local path, update that file in place or skip it if already correct; do not create a second file for the same group. Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-ticket file template below — one ticket per file, never a single combined file.
+- **A real issue tracker (GitHub, Linear, …)** → publish one new issue per unlinked ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. If the matching OpenSpec group already has a `**Ticket:**` URL, update that issue if needed or skip it if already correct; do not create a duplicate issue. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the `ready-for-agent` triage label unless instructed otherwise — the tickets are agent-grabbable by construction.
 
 Work the **frontier**: any ticket whose blockers are all done. For a purely linear chain that means top to bottom.
 
@@ -106,15 +119,16 @@ The end-to-end behaviour this ticket makes work, from the user's perspective —
 
 In either form, avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
 
-### 6. Rewrite the OpenSpec tasks.md to mirror the tickets (OpenSpec flow only)
+### 6. Link published tickets back to tasks.md (OpenSpec flow only)
 
 Skip this step entirely if this flow has no OpenSpec change — i.e. no `openspec/changes/<name>/` was produced by `/to-proposal`.
 
-If an OpenSpec change exists, its `tasks.md` currently holds whatever `/to-proposal` drafted. That draft is a plan of record, not the final task list — **this step makes the archive faithful to the real breakdown**:
+If an OpenSpec change exists, `tasks.md` remains the OpenSpec checklist. It does not become the tracker, but it should carry a lightweight backlink so future runs and `/implement` can map a checklist group to its ticket:
 
-1. Read `openspec/changes/<name>/tasks.md` (the draft) and `openspec/status --change "<name>"` to confirm the change context.
-2. Rewrite `tasks.md` so it **mirrors the approved tickets 1:1**: one `## N.` group per ticket, in dependency order (blockers first), with the group heading carrying the ticket's number and title (e.g. `## 1. Batch 1: API modules and mock (04-batch-1-api-modules-and-mock)`). Each task line is a `- [ ]` checkbox for one acceptance criterion of that ticket.
-3. Keep the format OpenSpec's apply parses: numbered `## N.` headings, every task an exact `- [ ]` checkbox. Do NOT invent tasks that aren't in the approved breakdown — the tickets are the authority.
-4. Verify with `openspec status --change "<name>"` that the change is still apply-ready (all artifacts `done`).
+1. For each successfully published or reused ticket, add or update a plain non-checkbox line under the matching `## N.` group, e.g. `**Ticket:** <url-or-local-path>`.
+2. Do not change checkbox text or reset completion state. Preserve every `- [x]` as complete.
+3. Do not create duplicate tickets for groups that already have a `**Ticket:**` link. Update the existing ticket if its ticket-specific fields are stale, or skip it if it already matches.
+4. Keep the format OpenSpec's apply/archive parses: numbered `## N.` headings, every task an exact `- [ ]` or `- [x]` checkbox. Ticket links must stay on plain non-checkbox lines.
+5. Verify with `openspec status --change "<name>"` that the change is still apply-ready (all artifacts `done`).
 
-Because the tickets are the authority and `tasks.md` mirrors them, **the ticket is the main task flow and `tasks.md` is its record**: `/implement` drives ticket state on the tracker and then checks off the corresponding `tasks.md` lines (ticket first, record second — no double bookkeeping beyond that one follow-up check). `openspec archive` reads **only** `tasks.md` for completion, so keeping it in lockstep with the tickets is what lets a finished change archive cleanly.
+Because `tasks.md` is the OpenSpec checklist and tickets are the collaboration surface, `/implement` works in two modes: when tickets exist, drive ticket state on the tracker and then check off the corresponding `tasks.md` lines; when tickets do not exist, work directly from `tasks.md` and check it off as the implementation lands. `openspec archive` reads **only** `tasks.md` for completion, so the checklist must stay accurate in both modes.

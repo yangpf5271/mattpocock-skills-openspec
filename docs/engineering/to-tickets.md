@@ -35,17 +35,17 @@ The blocking edges are the whole point. They make one set of tickets read two wa
 
 The edges live in the ticket regardless of medium; the medium only decides whether anything acts on them in parallel. `to-tickets` produces the artifact — how you run it (sequential by hand, or a parallel fleet) is up to you.
 
-## OpenSpec flow: rewriting tasks.md
+## OpenSpec flow: promoting tasks.md groups
 
-When the flow runs with OpenSpec ([to-proposal](https://aihero.dev/skills-to-proposal) produced a change at `openspec/changes/<name>/`), `to-tickets` is the **task-breaking authority**: OpenSpec only archives what actually gets built. So after publishing the tickets, `to-tickets` **rewrites the change's `tasks.md` to mirror the approved tickets 1:1** — one `## N.` group per ticket in dependency order, each task line an exact `- [ ]` checkbox for one acceptance criterion, no invented tasks.
+When the flow runs with OpenSpec ([to-proposal](https://aihero.dev/skills-to-proposal) produced a change at `openspec/changes/<name>/`), `tasks.md` remains the OpenSpec implementation checklist. `to-tickets` reads that checklist first and treats each numbered `## N.` vertical group as a ticket candidate: the checkbox lines become acceptance criteria, and the skill adds the tracker-specific fields OpenSpec does not own — What to build, Blocked by, status/label, tracker identity, and native links where the tracker supports them.
 
-The tickets are the authority, so `tasks.md` and the ticket files stay in lockstep: **the ticket is the main task flow and `tasks.md` is its record** — [implement](https://aihero.dev/skills-implement) drives ticket state on the tracker, then checks off the matching `tasks.md` lines (ticket first, record second). `openspec archive` reads only `tasks.md` for completion, so the lockstep is what lets a finished change archive cleanly.
+It only changes `tasks.md` boundaries when the checklist is not actually ticket-sized, or when you approve a split/merge during the quiz. After publishing, updating, or reusing a ticket, it writes a plain non-checkbox backlink such as `**Ticket:** <url-or-path>` under the matching group. That backlink prevents duplicate tickets on reruns and helps [implement](https://aihero.dev/skills-implement) map tracker work back to the OpenSpec checklist without turning `tasks.md` into the issue tracker.
 
 ## Vertical slices, not horizontal ones
 
 The whole skill turns on one distinction. A **horizontal** slice ships one layer of the change — all the schema, or all the API — and nothing works until every layer lands. A **vertical** slice, the tracer bullet, ships one narrow path through *every* layer at once, so it can be demoed the moment it's done.
 
-Before slicing, `to-tickets` looks for prefactoring — "make the change easy, then make the easy change" — and orders that work first. It then quizzes you on the breakdown (granularity, blocking edges, what to merge or split) before publishing anything, and publishes blockers first so each ticket's "Blocked by" can reference a real ticket.
+Before slicing, `to-tickets` looks for prefactoring — "make the change easy, then make the easy change" — and orders that work first. In a normal flow it then drafts the vertical slices. In an OpenSpec flow it starts from the existing `tasks.md` vertical groups and validates whether they are good ticket candidates. Either way, it quizzes you on the breakdown (granularity, blocking edges, what to merge or split) before publishing anything, and publishes blockers first so each ticket's "Blocked by" can reference a real ticket.
 
 ## The wide-refactor exception
 
@@ -59,11 +59,11 @@ One shape breaks the tracer-bullet rule: a **wide refactor** — a single mechan
 grill-with-docs → to-spec → to-tickets → implement → code-review
 ```
 
-With OpenSpec in the loop, it also rewrites the change's `tasks.md` to mirror the tickets (see above), so the archive records the real breakdown:
+With OpenSpec in the loop, it promotes `tasks.md` groups into tracker tickets and writes ticket links back to the checklist (see above), so the archive records the same work the tracker coordinates:
 
 ```txt
 grill-with-docs → to-spec → to-proposal → to-tickets → implement → archive-proposal
-                                              └─ rewrites tasks.md to mirror the tickets
+                                              └─ promotes tasks.md groups to tickets
 ```
 
 It sits between [to-spec](https://aihero.dev/skills-to-spec), which hands it a settled spec with user stories to slice against, and [implement](https://aihero.dev/skills-implement), which builds each ticket, driving [tdd](https://aihero.dev/skills-tdd) internally to write the tests test-first, before its [code-review](https://aihero.dev/skills-code-review) pass. Work the frontier one ticket per fresh context, clearing between them. When you're unsure which skill or flow fits, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.

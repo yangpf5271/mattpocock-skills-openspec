@@ -46,7 +46,7 @@ For `spec-driven`, the dependency chain is:
 
 ```
 proposal ─┬─▶ design ──┐
-          └─▶ specs ───┴─▶ tasks   (tasks done ⇒ apply-ready)
+         └─▶ specs ───┴─▶ tasks   (tasks artifact done ⇒ apply-ready)
 ```
 
 So you create them in order: **proposal → (design + specs) → tasks**.
@@ -68,13 +68,13 @@ b. **Bridge the conversation's content into the artifact** — map what `/to-spe
    | `proposal.md` (Why / What Changes / Capabilities / Impact) | Problem Statement + Solution + User Stories + Out of Scope |
    | `design.md` (Context / Goals / Non-Goals / Decisions / Risks) | Implementation Decisions + Testing Decisions + the seams chosen |
    | `specs/<capability>/spec.md` (ADDED/MODIFIED Requirements + Scenarios) | User Stories recast as SHALL/MUST requirements, each with WHEN/THEN scenarios. One file per capability named in the proposal's Capabilities section. **Check the baseline first**: if `openspec/specs/<capability>/spec.md` already exists, write a MODIFIED delta (only the requirements you change, against that baseline) — ADDED is only for capabilities with no existing spec. |
-   | `tasks.md` (numbered `- [ ]` checkboxes) | A **draft** of the vertical tracer-bullet slices — the plan of record. `/to-tickets` is the task-breaking authority in this flow: after you write this draft, `/to-tickets` reworks the real breakdown and **rewrites tasks.md** to mirror its tickets 1:1 (same vertical slices, aligned numbering). **Use exactly `- [ ]`** so apply can track them. |
+   | `tasks.md` (numbered `- [ ]` checkboxes) | The OpenSpec implementation checklist: vertical tracer-bullet slices grouped under `## N.` headings, with each checkbox as a verifiable acceptance/completion item. It is **not** a tracker ticket — it has no assignee, status lane, comments, or blocking links — but `/to-tickets` can later promote each group into a ticket by adding those tracker-specific parameters. **Use exactly `- [ ]`** so apply/archive can track them. |
 
    If the conversation never produced some of this (e.g. no `/to-spec` ran), synthesize it from the grilling thread directly. Don't invent scope the user didn't agree to.
 
    For `proposal.md` specifically: keep the Problem Statement in user-facing terms, with no file paths or implementation code. Reference the `/grilling` or `/to-spec` thread it synthesizes when one exists.
 
-   For `tasks.md` specifically: write the draft as **vertical slices** (each `## N.` group = one tracer-bullet ticket — a narrow but complete path through every layer, demoable on its own, blockers first), not as horizontal phases (Setup / Core / Tests). This keeps the draft close to what `/to-tickets` will produce, so its rewrite stays a light alignment rather than a re-breakdown.
+   For `tasks.md` specifically: write the checklist as **vertical slices** (each `## N.` group = one narrow but complete path through every layer, demoable or verifiable on its own, blockers first), not as horizontal phases (Setup / Core / Tests). If the flow skips `/to-tickets`, `/implement` can work this checklist directly. If the flow runs `/to-tickets`, those groups become the starting boundaries for tracker tickets; `/to-tickets` adds ticket-specific fields like Blocked by, status, and tracker identity.
 
 c. Read each completed dependency file before writing an artifact that depends on it.
 
@@ -91,7 +91,7 @@ openspec status --change "<name>"
 Tell the user:
 - The change name and location (`openspec/changes/<name>/`).
 - Which artifacts were created, one line each.
-- That `tasks.md` is a **draft**: if this flow runs `/to-tickets`, it will rework the breakdown and rewrite `tasks.md` to mirror the tickets — until then the draft is a plan, not the final task list.
+- That `tasks.md` is the OpenSpec implementation checklist: `/implement` can work it directly, or `/to-tickets` can promote each vertical slice into a tracker ticket by adding ticket-specific fields.
 - That the change is ready to implement — tasks can be worked by `/implement` (check each `- [ ]` off as it lands), and when all tasks are done, `/archive-proposal` delegates the merge-and-file to `openspec archive`, syncing the delta into `openspec/specs/` and filing the change under `openspec/changes/archive/`.
 
 ## Guardrails
@@ -102,4 +102,4 @@ Tell the user:
 - If the conversation is critically unclear on a point, use the **AskUserQuestion tool** to clarify — but prefer reasonable decisions to keep momentum.
 - Verify each artifact file exists after writing, before moving on.
 - Keep tasks as `- [ ]` checkboxes grouped under `## N.` headings — apply parses that exact format.
-- `tasks.md` is a **draft** plan of record — `/to-tickets` (when present in the flow) reworks the breakdown and rewrites it to mirror the tickets. Don't treat the draft as the final task list.
+- `tasks.md` is an OpenSpec checklist, not a full tracker ticket. Keep it as vertical slice groups with exact `- [ ]` checkboxes; `/to-tickets` may add ticket links later on plain non-checkbox lines.
