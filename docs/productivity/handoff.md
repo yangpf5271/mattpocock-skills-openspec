@@ -1,14 +1,14 @@
 Quickstart:
 
 ```bash
-npx skills add mattpocock/skills --skill=handoff
+npx skills add yangpf5271/mattpocock-skills-openspec --skill=handoff
 ```
 
 ```bash
 npx skills update handoff
 ```
 
-[Source](https://github.com/mattpocock/skills/tree/main/skills/productivity/handoff)
+[Source](https://github.com/yangpf5271/mattpocock-skills-openspec/tree/main/skills/productivity/handoff)
 
 ## What it does
 

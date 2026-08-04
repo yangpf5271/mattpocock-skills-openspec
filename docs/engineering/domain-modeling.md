@@ -1,14 +1,14 @@
 Quickstart:
 
 ```bash
-npx skills add mattpocock/skills --skill=domain-modeling
+npx skills add yangpf5271/mattpocock-skills-openspec --skill=domain-modeling
 ```
 
 ```bash
 npx skills update domain-modeling
 ```
 
-[Source](https://github.com/mattpocock/skills/tree/main/skills/engineering/domain-modeling)
+[Source](https://github.com/yangpf5271/mattpocock-skills-openspec/tree/main/skills/engineering/domain-modeling)
 
 ## What it does
 

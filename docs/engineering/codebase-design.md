@@ -1,14 +1,14 @@
 Quickstart:
 
 ```bash
-npx skills add mattpocock/skills --skill=codebase-design
+npx skills add yangpf5271/mattpocock-skills-openspec --skill=codebase-design
 ```
 
 ```bash
 npx skills update codebase-design
 ```
 
-[Source](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design)
+[Source](https://github.com/yangpf5271/mattpocock-skills-openspec/tree/main/skills/engineering/codebase-design)
 
 ## What it does
 

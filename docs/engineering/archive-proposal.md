@@ -1,14 +1,14 @@
 Quickstart:
 
 ```bash
-npx skills add mattpocock/skills --skill=archive-proposal
+npx skills add yangpf5271/mattpocock-skills-openspec --skill=archive-proposal
 ```
 
 ```bash
 npx skills update archive-proposal
 ```
 
-[Source](https://github.com/mattpocock/skills/tree/main/skills/engineering/archive-proposal)
+[Source](https://github.com/yangpf5271/mattpocock-skills-openspec/tree/main/skills/engineering/archive-proposal)
 
 ## What it does
 

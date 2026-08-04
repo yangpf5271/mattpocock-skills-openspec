@@ -10,9 +10,9 @@
 
 # Skills For Real Engineers
 
-[![skills.sh](https://skills.sh/b/mattpocock/skills)](https://skills.sh/mattpocock/skills)
+[![skills.sh](https://skills.sh/b/yangpf5271/mattpocock-skills-openspec)](https://skills.sh/yangpf5271/mattpocock-skills-openspec)
 
-My agent skills that I use every day to do real engineering - not vibe coding.
+This repository is an OpenSpec-enabled fork of Matt Pocock's agent skills for real engineering — not vibe coding.
 
 Developing real applications is hard. Approaches like GSD, BMAD, and Spec-Kit try to help by owning the process. But while doing so, they take away your control and make bugs in the process hard to resolve.
 
@@ -26,12 +26,23 @@ If you want to keep up with changes to these skills, and any new ones I create, 
 
 ## Installation (30-second setup)
 
-Two ways in, two philosophies. **The [Claude Code plugin](https://code.claude.com/docs/en/plugins)** installs the whole set as a managed, read-only bundle that updates when I ship — you subscribe rather than fork. **[skills.sh](https://skills.sh/mattpocock/skills)** copies editable skill files into your project, so you can hack on them and make them your own. Pick one — installing both leaves you with every skill twice.
+This OpenSpec fork is distributed through **[skills.sh](https://skills.sh/yangpf5271/mattpocock-skills-openspec)**. The installer copies editable skill files into your selected agent, including Claude Code and Codex. Claude Code's official marketplace entry named `mattpocock-skills` installs Matt Pocock's upstream project, not this fork, so it does not include the OpenSpec additions.
 
 ### 1. Get the skills
 
 <details>
-<summary><strong>Claude Code</strong></summary>
+<summary><strong>Claude Code, Codex, and other agents</strong></summary>
+
+```bash
+npx skills@latest add yangpf5271/mattpocock-skills-openspec
+```
+
+Pick the skills you want and which coding agents to install them on. **Make sure `setup-matt-pocock-skills` is one of them.** The installer can install this fork into Claude Code as well as Codex and other supported agents.
+
+</details>
+
+<details>
+<summary><strong>Official upstream Claude plugin (without this fork's OpenSpec additions)</strong></summary>
 
 ```bash
 claude plugins install mattpocock-skills
@@ -43,20 +54,7 @@ Or, from inside a session:
 /plugin install mattpocock-skills
 ```
 
-It's in Claude Code's official marketplace, so there's nothing to add first, and updates arrive automatically.
-
-</details>
-
-<details>
-<summary><strong>Codex, and other agents</strong></summary>
-
-```bash
-npx skills@latest add mattpocock/skills
-```
-
-Pick the skills you want, and which coding agents to install them on. **The installer lets you choose which skills to take — make sure `setup-matt-pocock-skills` is one of them.**
-
-A native Codex plugin is on the roadmap — see [`.agents/adr/0002-ship-as-a-claude-code-plugin.md`](./.agents/adr/0002-ship-as-a-claude-code-plugin.md).
+This installs Matt Pocock's official marketplace version. Use the `npx skills` command above when you need `/to-proposal`, `/archive-proposal`, or the modified Matt + OpenSpec workflow.
 
 </details>
 
@@ -66,7 +64,7 @@ A native Codex plugin is on the roadmap — see [`.agents/adr/0002-ship-as-a-cla
 Use the same installer, on any agent — including Claude Code:
 
 ```bash
-npx skills@latest add mattpocock/skills
+npx skills@latest add yangpf5271/mattpocock-skills-openspec
 ```
 
 It writes the skills into your repo as ordinary files you own and can edit. Nothing updates behind your back; pull my latest changes when you want them with `npx skills update`.

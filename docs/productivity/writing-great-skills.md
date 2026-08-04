@@ -1,14 +1,14 @@
 Quickstart:
 
 ```bash
-npx skills add mattpocock/skills --skill=writing-great-skills
+npx skills add yangpf5271/mattpocock-skills-openspec --skill=writing-great-skills
 ```
 
 ```bash
 npx skills update writing-great-skills
 ```
 
-[Source](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-great-skills)
+[Source](https://github.com/yangpf5271/mattpocock-skills-openspec/tree/main/skills/productivity/writing-great-skills)
 
 ## What it does
 

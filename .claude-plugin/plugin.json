@@ -1,5 +1,5 @@
 {
-  "name": "mattpocock-skills",
+  "name": "mattpocock-skills-openspec",
   "version": "1.2.1",
   "description": "Matt Pocock's composable engineering skills for grilling, specs, tickets, TDD, code review, domain modelling, and an optional OpenSpec lifecycle. Plug-and-play, not vibe coding.",
   "author": {
@@ -7,7 +7,7 @@
     "url": "https://www.aihero.dev"
   },
   "homepage": "https://www.aihero.dev/s/skills-newsletter",
-  "repository": "https://github.com/mattpocock/skills",
+  "repository": "https://github.com/yangpf5271/mattpocock-skills-openspec",
   "license": "MIT",
   "keywords": [
     "engineering",

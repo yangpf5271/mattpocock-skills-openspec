@@ -1,14 +1,14 @@
 Quickstart:
 
 ```bash
-npx skills add mattpocock/skills --skill=resolving-merge-conflicts
+npx skills add yangpf5271/mattpocock-skills-openspec --skill=resolving-merge-conflicts
 ```
 
 ```bash
 npx skills update resolving-merge-conflicts
 ```
 
-[Source](https://github.com/mattpocock/skills/tree/main/skills/engineering/resolving-merge-conflicts)
+[Source](https://github.com/yangpf5271/mattpocock-skills-openspec/tree/main/skills/engineering/resolving-merge-conflicts)
 
 ## What it does
 

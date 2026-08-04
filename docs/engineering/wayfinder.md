@@ -1,14 +1,14 @@
 Quickstart:
 
 ```bash
-npx skills add mattpocock/skills --skill=wayfinder
+npx skills add yangpf5271/mattpocock-skills-openspec --skill=wayfinder
 ```
 
 ```bash
 npx skills update wayfinder
 ```
 
-[Source](https://github.com/mattpocock/skills/tree/main/skills/engineering/wayfinder)
+[Source](https://github.com/yangpf5271/mattpocock-skills-openspec/tree/main/skills/engineering/wayfinder)
 
 ## What it does
 
