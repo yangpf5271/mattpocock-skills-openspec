@@ -39,7 +39,7 @@ The edges live in the ticket regardless of medium; the medium only decides wheth
 
 When the flow runs with OpenSpec ([to-proposal](https://aihero.dev/skills-to-proposal) produced a change at `openspec/changes/<name>/`), `to-tickets` is the **task-breaking authority**: OpenSpec only archives what actually gets built. So after publishing the tickets, `to-tickets` **rewrites the change's `tasks.md` to mirror the approved tickets 1:1** — one `## N.` group per ticket in dependency order, each task line an exact `- [ ]` checkbox for one acceptance criterion, no invented tasks.
 
-The tickets are the authority, so `tasks.md` and the ticket files stay in lockstep: [implement](https://aihero.dev/skills-implement) checks off `tasks.md` as the single source of truth, and the ticket files are a view over it — no double bookkeeping.
+The tickets are the authority, so `tasks.md` and the ticket files stay in lockstep: **the ticket is the main task flow and `tasks.md` is its record** — [implement](https://aihero.dev/skills-implement) drives ticket state on the tracker, then checks off the matching `tasks.md` lines (ticket first, record second). `openspec archive` reads only `tasks.md` for completion, so the lockstep is what lets a finished change archive cleanly.
 
 ## Vertical slices, not horizontal ones
 

@@ -117,4 +117,4 @@ If an OpenSpec change exists, its `tasks.md` currently holds whatever `/to-propo
 3. Keep the format OpenSpec's apply parses: numbered `## N.` headings, every task an exact `- [ ]` checkbox. Do NOT invent tasks that aren't in the approved breakdown — the tickets are the authority.
 4. Verify with `openspec status --change "<name>"` that the change is still apply-ready (all artifacts `done`).
 
-Because the tickets are the authority and `tasks.md` mirrors them, **ticket status and tasks.md status stay in lockstep**: `/implement` checks off `tasks.md` as the single source of truth, and the ticket files are a view over it (no double bookkeeping).
+Because the tickets are the authority and `tasks.md` mirrors them, **the ticket is the main task flow and `tasks.md` is its record**: `/implement` drives ticket state on the tracker and then checks off the corresponding `tasks.md` lines (ticket first, record second — no double bookkeeping beyond that one follow-up check). `openspec archive` reads **only** `tasks.md` for completion, so keeping it in lockstep with the tickets is what lets a finished change archive cleanly.

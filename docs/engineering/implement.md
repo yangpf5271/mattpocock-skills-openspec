@@ -30,7 +30,7 @@ Around that core it keeps the loop tight — typecheck often, run single test fi
 
 ## Tracking progress in an OpenSpec flow
 
-When the work is an OpenSpec change (`openspec/changes/<name>/` exists, produced by [to-proposal](https://aihero.dev/skills-to-proposal)), **`tasks.md` is the single source of truth for task status** — it mirrors the tickets (see [to-tickets](https://aihero.dev/skills-to-tickets) step 6). Check each `- [ ]` off in `tasks.md` as its ticket lands; the ticket files on the tracker are a *view* over `tasks.md`, so don't double-bookkeep them. When the last task is checked, the change is ready for [archive-proposal](https://aihero.dev/skills-archive-proposal).
+In a Matt+OpenSpec flow, **the ticket is the main task flow and OpenSpec is the record**: the tracker is where ticket state is really driven, and `tasks.md` mirrors the tickets 1:1 (see [to-tickets](https://aihero.dev/skills-to-tickets) step 6). The working order is: drive the ticket state on the tracker, then check the corresponding `- [ ]` off in `openspec/changes/<name>/tasks.md`. Since `openspec archive` reads only `tasks.md` for completion, keeping it in lockstep with the tickets is what lets a finished change archive cleanly. When the last task is checked, the change is ready for [archive-proposal](https://aihero.dev/skills-archive-proposal).
 
 ## Where it fits
 
