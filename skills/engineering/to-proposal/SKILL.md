@@ -67,7 +67,7 @@ b. **Bridge the conversation's content into the artifact** — map what `/to-spe
    |---|---|
    | `proposal.md` (Why / What Changes / Capabilities / Impact) | Problem Statement + Solution + User Stories + Out of Scope |
    | `design.md` (Context / Goals / Non-Goals / Decisions / Risks) | Implementation Decisions + Testing Decisions + the seams chosen |
-   | `specs/<capability>/spec.md` (ADDED/MODIFIED Requirements + Scenarios) | User Stories recast as SHALL/MUST requirements, each with WHEN/THEN scenarios. One file per capability named in the proposal's Capabilities section. |
+   | `specs/<capability>/spec.md` (ADDED/MODIFIED Requirements + Scenarios) | User Stories recast as SHALL/MUST requirements, each with WHEN/THEN scenarios. One file per capability named in the proposal's Capabilities section. **Check the baseline first**: if `openspec/specs/<capability>/spec.md` already exists, write a MODIFIED delta (only the requirements you change, against that baseline) — ADDED is only for capabilities with no existing spec. |
    | `tasks.md` (numbered `- [ ]` checkboxes) | A **draft** of the vertical tracer-bullet slices — the plan of record. `/to-tickets` is the task-breaking authority in this flow: after you write this draft, `/to-tickets` reworks the real breakdown and **rewrites tasks.md** to mirror its tickets 1:1 (same vertical slices, aligned numbering). **Use exactly `- [ ]`** so apply can track them. |
 
    If the conversation never produced some of this (e.g. no `/to-spec` ran), synthesize it from the grilling thread directly. Don't invent scope the user didn't agree to.
@@ -90,7 +90,7 @@ Tell the user:
 - The change name and location (`openspec/changes/<name>/`).
 - Which artifacts were created, one line each.
 - That `tasks.md` is a **draft**: if this flow runs `/to-tickets`, it will rework the breakdown and rewrite `tasks.md` to mirror the tickets — until then the draft is a plan, not the final task list.
-- That the change is ready to implement — tasks can be worked by `/implement` (check each `- [ ]` off as it lands), and when all tasks are done, `/archive-proposal` merges the delta into `openspec/specs/` and files the change under `openspec/changes/archive/`.
+- That the change is ready to implement — tasks can be worked by `/implement` (check each `- [ ]` off as it lands), and when all tasks are done, `/archive-proposal` delegates the merge-and-file to `openspec archive`, syncing the delta into `openspec/specs/` and filing the change under `openspec/changes/archive/`.
 
 ## Guardrails
 
