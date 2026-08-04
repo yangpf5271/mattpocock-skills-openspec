@@ -5,7 +5,7 @@ This repo uses [OpenSpec](https://github.com/Fission-AI/OpenSpec) as the in-repo
 ## Instance location
 
 - **Root:** `openspec/` at the repo root
-- **Config:** `openspec/config.yaml` (schema: `spec-driven`; project `context:` and per-artifact `rules:` live here)
+- **Config:** `openspec/config.yaml` (standard shared config: `schema: spec-driven`; Matt-specific rules stay in the installed skills)
 - **Changes (in flight):** `openspec/changes/<change-name>/` — each holds `proposal.md`, `design.md`, `specs/<capability>/spec.md` deltas, and `tasks.md`
 - **Main specs (the living source of truth):** `openspec/specs/<capability>/spec.md`
 - **Archive (filed changes):** `openspec/changes/archive/YYYY-MM-DD-<change-name>/`

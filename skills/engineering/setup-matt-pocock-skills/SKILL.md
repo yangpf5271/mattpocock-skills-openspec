@@ -72,12 +72,16 @@ Three checks, in order. For the install/init steps, **confirm with the user via 
    npm install -g @fission-ai/openspec
    ```
    Re-check `openspec --version` after installing.
-2. **Instance initialized?** Look for `openspec/config.yaml` **and** the `openspec/changes/` + `openspec/specs/` directories (empty dirs are not tracked by git, so a fresh clone of a repo that ships a `config.yaml` template — like this one — can have the config but no `changes/` or `specs/`; `/to-proposal` would then fail at its first step). If either is absent, ask the user to confirm initializing at the repo root, then run — **always with `--tools none`**:
+2. **Instance initialized?** Look for `openspec/config.yaml` **and** the `openspec/changes/` + `openspec/specs/` directories (empty dirs are not tracked by git, so a fresh clone can have the config but no `changes/` or `specs/`; `/to-proposal` would then fail at its first step). If either directory is absent, ask the user to confirm initializing at the repo root, then run — **always with `--tools none`**:
    ```bash
    openspec init --tools none
    ```
-   Re-check both the config and the directories after init. (In non-interactive mode `openspec init` creates `changes/` and `specs/` but skips writing `config.yaml`; if `config.yaml` is already present it is **left untouched** — `init` reports `Config: openspec/config.yaml (exists)` and moves on — so the config the repo ships survives init unchanged.)
-3. **Project context filled?** Open `openspec/config.yaml`. If its `context:` is still empty/commented, offer to seed it with the tech stack you found in Section C's exploration. Let the user edit before writing.
+   Re-check the directories after init. If `openspec/config.yaml` already exists, leave it untouched — it is shared project configuration and may contain team-owned context or rules. In non-interactive mode `openspec init` preserves an existing config but does not create a missing one.
+3. **Standard config present?** If `openspec/config.yaml` is still missing after init, write the minimal standard config:
+   ```yaml
+   schema: spec-driven
+   ```
+   Do not add `context:` or `rules:`. Matt-specific behavior belongs in these skills, not in the shared OpenSpec configuration. If a config already exists with another schema, do not overwrite it; explain that `/to-proposal` targets the `spec-driven` schema and ask the user how to proceed.
 
 On success, record the instance root (default `openspec/` at the repo root) in `docs/agents/openspec-instance.md`.
 

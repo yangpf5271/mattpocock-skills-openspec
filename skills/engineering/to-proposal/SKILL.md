@@ -14,7 +14,7 @@ Where `/to-spec` publishes a spec to the **issue tracker** (out of the repo), `/
   ```bash
   npm install -g @fission-ai/openspec
   ```
-- **OpenSpec instance initialized in this repo** — `openspec/changes/` and `openspec/specs/` must exist. If not, run `openspec init --tools none` (the `--tools none` keeps it from installing its own `.claude/` skills, which would clash with this repo's plugin layout). `/setup-matt-pocock-skills` records the instance root in `docs/agents/openspec-instance.md`; read it if it exists.
+- **OpenSpec instance initialized in this repo** — `openspec/changes/` and `openspec/specs/` must exist. If not, run `openspec init --tools none` (the `--tools none` keeps it from installing its own `.claude/` skills, which would clash with this repo's plugin layout). `openspec/config.yaml` must select the `spec-driven` schema; if it is missing after init, write only `schema: spec-driven`. Never add Matt-specific `context:` or `rules:` to this shared project config. If an existing config selects another schema, do not overwrite it — ask the user how to proceed. `/setup-matt-pocock-skills` records the instance root in `docs/agents/openspec-instance.md`; read it if it exists.
 
 ## Process
 
@@ -71,6 +71,8 @@ b. **Bridge the conversation's content into the artifact** — map what `/to-spe
    | `tasks.md` (numbered `- [ ]` checkboxes) | A **draft** of the vertical tracer-bullet slices — the plan of record. `/to-tickets` is the task-breaking authority in this flow: after you write this draft, `/to-tickets` reworks the real breakdown and **rewrites tasks.md** to mirror its tickets 1:1 (same vertical slices, aligned numbering). **Use exactly `- [ ]`** so apply can track them. |
 
    If the conversation never produced some of this (e.g. no `/to-spec` ran), synthesize it from the grilling thread directly. Don't invent scope the user didn't agree to.
+
+   For `proposal.md` specifically: keep the Problem Statement in user-facing terms, with no file paths or implementation code. Reference the `/grilling` or `/to-spec` thread it synthesizes when one exists.
 
    For `tasks.md` specifically: write the draft as **vertical slices** (each `## N.` group = one tracer-bullet ticket — a narrow but complete path through every layer, demoable on its own, blockers first), not as horizontal phases (Setup / Core / Tests). This keeps the draft close to what `/to-tickets` will produce, so its rewrite stays a light alignment rather than a re-breakdown.
 
