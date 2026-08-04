@@ -68,9 +68,11 @@ b. **Bridge the conversation's content into the artifact** — map what `/to-spe
    | `proposal.md` (Why / What Changes / Capabilities / Impact) | Problem Statement + Solution + User Stories + Out of Scope |
    | `design.md` (Context / Goals / Non-Goals / Decisions / Risks) | Implementation Decisions + Testing Decisions + the seams chosen |
    | `specs/<capability>/spec.md` (ADDED/MODIFIED Requirements + Scenarios) | User Stories recast as SHALL/MUST requirements, each with WHEN/THEN scenarios. One file per capability named in the proposal's Capabilities section. |
-   | `tasks.md` (numbered `- [ ]` checkboxes) | The tracer-bullet slices `/to-tickets` would produce — vertical, demoable, blockers-first. **Use exactly `- [ ]`** so apply can track them. |
+   | `tasks.md` (numbered `- [ ]` checkboxes) | A **draft** of the vertical tracer-bullet slices — the plan of record. `/to-tickets` is the task-breaking authority in this flow: after you write this draft, `/to-tickets` reworks the real breakdown and **rewrites tasks.md** to mirror its tickets 1:1 (same vertical slices, aligned numbering). **Use exactly `- [ ]`** so apply can track them. |
 
    If the conversation never produced some of this (e.g. no `/to-spec` ran), synthesize it from the grilling thread directly. Don't invent scope the user didn't agree to.
+
+   For `tasks.md` specifically: write the draft as **vertical slices** (each `## N.` group = one tracer-bullet ticket — a narrow but complete path through every layer, demoable on its own, blockers first), not as horizontal phases (Setup / Core / Tests). This keeps the draft close to what `/to-tickets` will produce, so its rewrite stays a light alignment rather than a re-breakdown.
 
 c. Read each completed dependency file before writing an artifact that depends on it.
 
@@ -87,7 +89,8 @@ openspec status --change "<name>"
 Tell the user:
 - The change name and location (`openspec/changes/<name>/`).
 - Which artifacts were created, one line each.
-- That it's ready to implement — tasks can be worked by `/implement` (check each `- [ ]` off as it lands), and when all tasks are done, `/archive-proposal` merges the delta into `openspec/specs/` and files the change under `openspec/changes/archive/`.
+- That `tasks.md` is a **draft**: if this flow runs `/to-tickets`, it will rework the breakdown and rewrite `tasks.md` to mirror the tickets — until then the draft is a plan, not the final task list.
+- That the change is ready to implement — tasks can be worked by `/implement` (check each `- [ ]` off as it lands), and when all tasks are done, `/archive-proposal` merges the delta into `openspec/specs/` and files the change under `openspec/changes/archive/`.
 
 ## Guardrails
 
@@ -97,3 +100,4 @@ Tell the user:
 - If the conversation is critically unclear on a point, use the **AskUserQuestion tool** to clarify — but prefer reasonable decisions to keep momentum.
 - Verify each artifact file exists after writing, before moving on.
 - Keep tasks as `- [ ]` checkboxes grouped under `## N.` headings — apply parses that exact format.
+- `tasks.md` is a **draft** plan of record — `/to-tickets` (when present in the flow) reworks the breakdown and rewrites it to mirror the tickets. Don't treat the draft as the final task list.

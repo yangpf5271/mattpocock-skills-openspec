@@ -28,12 +28,22 @@ The idea `implement` runs on is the **seam** — the stable interface a feature 
 
 Around that core it keeps the loop tight — typecheck often, run single test files as it goes, run the whole suite once at the end — then closes out with a review pass and a commit to the current branch.
 
+## Tracking progress in an OpenSpec flow
+
+When the work is an OpenSpec change (`openspec/changes/<name>/` exists, produced by [to-proposal](https://aihero.dev/skills-to-proposal)), **`tasks.md` is the single source of truth for task status** — it mirrors the tickets (see [to-tickets](https://aihero.dev/skills-to-tickets) step 6). Check each `- [ ]` off in `tasks.md` as its ticket lands; the ticket files on the tracker are a *view* over `tasks.md`, so don't double-bookkeep them. When the last task is checked, the change is ready for [archive-proposal](https://aihero.dev/skills-archive-proposal).
+
 ## Where it fits
 
 `implement` is the build step near the end of the main chain, just before the review:
 
 ```txt
 grill-with-docs → to-spec → to-tickets → implement → code-review
+```
+
+With OpenSpec in the loop, implementation sits between `to-tickets` (which rewrote `tasks.md` to mirror the tickets) and `archive-proposal`:
+
+```txt
+grill-with-docs → to-spec → to-proposal → to-tickets → implement → archive-proposal
 ```
 
 Reach for it after the work has been specced and sequenced, not before. Its key neighbours are [to-tickets](https://aihero.dev/skills-to-tickets), which produces the tickets — each declaring its blocking edges — that it works through, and [tdd](https://aihero.dev/skills-tdd), which it drives internally to write the tests at each seam before running its own [code-review](https://aihero.dev/skills-code-review) pass and committing. When you're unsure which skill or flow fits, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.

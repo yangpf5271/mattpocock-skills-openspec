@@ -10,6 +10,8 @@ Break a plan, spec, or conversation into a set of **tickets** — tracer-bullet 
 
 The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not.
 
+When this flow runs with OpenSpec (`/to-proposal` produced an OpenSpec change at `openspec/changes/<name>/`), the tickets you break down here are the **task-breaking authority**: after publishing, rewrite the change's `tasks.md` to mirror the tickets 1:1 (see Step 6). OpenSpec is the archive — it records the real breakdown, it doesn't invent its own.
+
 ## Process
 
 ### 1. Gather context
@@ -103,3 +105,16 @@ The end-to-end behaviour this ticket makes work, from the user's perspective —
 </issue-template>
 
 In either form, avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
+
+### 6. Rewrite the OpenSpec tasks.md to mirror the tickets (OpenSpec flow only)
+
+Skip this step entirely if this flow has no OpenSpec change — i.e. no `openspec/changes/<name>/` was produced by `/to-proposal`.
+
+If an OpenSpec change exists, its `tasks.md` currently holds whatever `/to-proposal` drafted. That draft is a plan of record, not the final task list — **this step makes the archive faithful to the real breakdown**:
+
+1. Read `openspec/changes/<name>/tasks.md` (the draft) and `openspec/status --change "<name>"` to confirm the change context.
+2. Rewrite `tasks.md` so it **mirrors the approved tickets 1:1**: one `## N.` group per ticket, in dependency order (blockers first), with the group heading carrying the ticket's number and title (e.g. `## 1. Batch 1: API modules and mock (04-batch-1-api-modules-and-mock)`). Each task line is a `- [ ]` checkbox for one acceptance criterion of that ticket.
+3. Keep the format OpenSpec's apply parses: numbered `## N.` headings, every task an exact `- [ ]` checkbox. Do NOT invent tasks that aren't in the approved breakdown — the tickets are the authority.
+4. Verify with `openspec status --change "<name>"` that the change is still apply-ready (all artifacts `done`).
+
+Because the tickets are the authority and `tasks.md` mirrors them, **ticket status and tasks.md status stay in lockstep**: `/implement` checks off `tasks.md` as the single source of truth, and the ticket files are a view over it (no double bookkeeping).

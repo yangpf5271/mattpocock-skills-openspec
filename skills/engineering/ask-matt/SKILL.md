@@ -22,7 +22,7 @@ The route most work travels. You have an idea and want it built.
 3. **Branch — is this a multi-session build?**
    - **Yes** → **`/to-spec`** (turn the thread into a spec), then **`/to-tickets`** to split it into tracer-bullet tickets, each declaring its **blocking edges**. On a local tracker that's one file per ticket under `.scratch/<feature>/issues/`, worked blockers-first by hand; on a real tracker the edges become native blocking links, so any ticket whose blockers are done can be grabbed — kick off **`/implement`** per ticket, **clearing context between each one**.
 
-     Want the spec to live **in the repo as an evolving source of truth**, not just on the tracker? After (or instead of) `/to-spec`, run **`/to-proposal`** — it sinks the same thinking into an OpenSpec change at `openspec/changes/<name>/` (proposal, design, delta specs, tasks). Implement the tasks (still via `/implement`, checking each off), then **`/archive-proposal`** merges the change's delta into `openspec/specs/` and files the change under `openspec/changes/archive/`. See **Spec lifecycle** below for why this loop matters.
+     Want the spec to live **in the repo as an evolving source of truth**, not just on the tracker? After (or instead of) `/to-spec`, run **`/to-proposal`** — it sinks the same thinking into an OpenSpec change at `openspec/changes/<name>/` (proposal, design, delta specs, a draft `tasks.md`). **`/to-tickets` is still the task-breaking authority**: its real breakdown rewrites the change's `tasks.md` to mirror the tickets. Implement the tasks (via `/implement`, checking `tasks.md` off — the tickets are a view over it), then **`/archive-proposal`** delegates the merge-and-file to `openspec archive`, syncing the change's delta into `openspec/specs/` and filing the change under `openspec/changes/archive/`. See **Spec lifecycle** below for why this loop matters.
    - **No** → **`/implement`** right here, in the same context window.
 
    Either way, **`/implement`** builds each issue by driving **`/tdd`** internally — one red-green slice at a time — then closes out by running **`/code-review`**, a two-axis review (Standards + Spec) of the diff, before committing. Reach for **`/tdd`** on its own when you just want to build a concrete behaviour test-first without a full spec, and **`/code-review`** on its own whenever you want to review a branch or PR against a fixed point.
@@ -80,14 +80,17 @@ Off the main flow entirely.
 An **optional** loop layered on the main flow for projects that want their specs to live **in the repo** and **evolve across changes**, rather than living only on the issue tracker. It needs the OpenSpec CLI and an instance initialized by `/setup-matt-pocock-skills` (see Precondition).
 
 ```
-/to-spec ──▶ /to-proposal ──▶ /implement ──▶ /archive-proposal
-(thread)     openspec/         (check off       merge delta into
-             changes/<name>/    tasks.md)        openspec/specs/,
-                                                 file under archive/
+/to-spec ──▶ /to-proposal ──▶ /to-tickets ──▶ /implement ──▶ /archive-proposal
+(thread)     openspec/         (rewrite        (check off       openspec archive:
+             changes/<name>/    tasks.md        tasks.md)        merge delta into
+             proposal+design+   to mirror                        openspec/specs/,
+             delta specs+       the tickets)                     file under archive/
+             draft tasks.md)
 ```
 
-- **`/to-proposal`** — takes the grilling/spec thread and writes it into `openspec/changes/<name>/` as `proposal.md` + `design.md` + delta `specs/<capability>/spec.md` + `tasks.md`. Same synthesis job as `/to-spec`, but the output is the repo, not the tracker — so the spec becomes auditable in version control alongside the code.
-- **`/archive-proposal`** — once the tasks are done, syncs the change's delta into the main `openspec/specs/` (ADDED appended, MODIFIED replaced in full, REMOVED dropped) and moves the change to `openspec/changes/archive/YYYY-MM-DD-<name>/`.
+- **`/to-proposal`** — takes the grilling/spec thread and writes it into `openspec/changes/<name>/` as `proposal.md` + `design.md` + delta `specs/<capability>/spec.md` + a **draft** `tasks.md` (vertical slices, the plan of record). Same synthesis job as `/to-spec`, but the output is the repo, not the tracker — so the spec becomes auditable in version control alongside the code.
+- **`/to-tickets`** — still the task-breaking authority: it produces the real tracer-bullet breakdown, then **rewrites the change's `tasks.md` to mirror the tickets 1:1** (one `## N.` group per ticket, aligned numbering). OpenSpec is the archive — it records the real breakdown, it doesn't invent its own.
+- **`/archive-proposal`** — once the tasks are done, pre-flights completion, gets your go-ahead, then **delegates to `openspec archive`**: the CLI syncs the change's delta into the main `openspec/specs/` (ADDED appended, MODIFIED replaced in full, REMOVED dropped) and moves the change to `openspec/changes/archive/YYYY-MM-DD-<name>/`. The merge rules are OpenSpec's, never re-implemented by hand.
 
 Why bother when `/to-spec` + `/to-tickets` already work? Because the **next** change then builds on specs that already reflect the last one — `/to-proposal` reads the current `openspec/specs/` as its baseline, so each proposal is a delta against living truth, not a rewrite from scratch. Reach for this loop on projects where the spec is long-lived and many changes stack; skip it for one-off work the tracker already captures.
 

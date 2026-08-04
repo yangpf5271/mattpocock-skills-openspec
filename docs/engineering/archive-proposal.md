@@ -12,7 +12,7 @@ npx skills update archive-proposal
 
 ## What it does
 
-`archive-proposal` finalizes a finished OpenSpec change: it syncs the change's delta specs into the project's main `openspec/specs/`, then files the change under `openspec/changes/archive/YYYY-MM-DD-<name>/`.
+`archive-proposal` finalizes a finished OpenSpec change: it pre-flights that the change is actually done, gets your go-ahead, then **delegates the merge-and-file to `openspec archive`** — the CLI syncs the change's delta specs into the project's main `openspec/specs/` and files the change under `openspec/changes/archive/YYYY-MM-DD-<name>/`.
 
 This is the step that turns a one-off change into a **permanent part of the spec's source of truth**. Without it, every new [to-proposal](https://aihero.dev/skills-to-proposal) would rewrite specs from scratch; with it, each proposal is a delta against living, accumulated truth.
 
@@ -29,19 +29,19 @@ Reach for it once a change's tasks are done (worked through by [implement](https
 
 ## How it merges the delta
 
-Before filing, `archive-proposal` checks the change's delta specs and, with your confirmation, applies them to the main specs:
+`archive-proposal` pre-flights completion (artifacts + tasks) and asks for your confirmation, then hands the merge to `openspec archive`. The CLI owns the delta semantics — you never re-implement them:
 
 - **ADDED Requirements** — appended to `openspec/specs/<capability>/spec.md`.
-- **MODIFIED Requirements** — the matching block replaced **in full** (partial merges silently lose detail, so it never merges partially).
+- **MODIFIED Requirements** — the matching block replaced **in full** (partial merges silently lose detail, so the CLI never merges partially).
 - **REMOVED Requirements** — the matching block dropped.
 - **RENAMED Requirements** — the `FROM:` / `TO:` rename applied.
 
-It shows you a combined summary of every change across all capabilities before asking whether to sync. If you skip the sync, the change is still archived but the delta is frozen in the archive — the main specs won't reflect it.
+The CLI shows you a summary of every change before applying, and warns (but doesn't block) on incomplete artifacts or tasks — mirroring the pre-flight the skill already did. If you need to skip the sync, use the CLI's `--skip-specs` flag.
 
 ## It's working if
 
 - It checks artifact and task completion first, and warns (but doesn't block) if anything is incomplete.
-- It shows you exactly what the delta sync will change before doing it.
+- It delegates the sync to `openspec archive` rather than merging delta specs by hand.
 - The change lands at `openspec/changes/archive/YYYY-MM-DD-<name>/` and `openspec list` no longer shows it as active.
 
 ## Where it fits
@@ -50,7 +50,7 @@ It shows you a combined summary of every change across all capabilities before a
 
 ```txt
 to-proposal → implement → archive-proposal
-                            └─ merges delta into openspec/specs/
+                            └─ openspec archive merges delta into openspec/specs/
 ```
 
 Reach for it after implementation completes. Its key neighbour is [to-proposal](https://aihero.dev/skills-to-proposal), which creates the change that `archive-proposal` files — together they form the loop that keeps the repo's specs evolving across changes. When you're unsure which skill or flow fits, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.

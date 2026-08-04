@@ -35,6 +35,12 @@ The blocking edges are the whole point. They make one set of tickets read two wa
 
 The edges live in the ticket regardless of medium; the medium only decides whether anything acts on them in parallel. `to-tickets` produces the artifact — how you run it (sequential by hand, or a parallel fleet) is up to you.
 
+## OpenSpec flow: rewriting tasks.md
+
+When the flow runs with OpenSpec ([to-proposal](https://aihero.dev/skills-to-proposal) produced a change at `openspec/changes/<name>/`), `to-tickets` is the **task-breaking authority**: OpenSpec only archives what actually gets built. So after publishing the tickets, `to-tickets` **rewrites the change's `tasks.md` to mirror the approved tickets 1:1** — one `## N.` group per ticket in dependency order, each task line an exact `- [ ]` checkbox for one acceptance criterion, no invented tasks.
+
+The tickets are the authority, so `tasks.md` and the ticket files stay in lockstep: [implement](https://aihero.dev/skills-implement) checks off `tasks.md` as the single source of truth, and the ticket files are a view over it — no double bookkeeping.
+
 ## Vertical slices, not horizontal ones
 
 The whole skill turns on one distinction. A **horizontal** slice ships one layer of the change — all the schema, or all the API — and nothing works until every layer lands. A **vertical** slice, the tracer bullet, ships one narrow path through *every* layer at once, so it can be demoed the moment it's done.
@@ -51,6 +57,13 @@ One shape breaks the tracer-bullet rule: a **wide refactor** — a single mechan
 
 ```txt
 grill-with-docs → to-spec → to-tickets → implement → code-review
+```
+
+With OpenSpec in the loop, it also rewrites the change's `tasks.md` to mirror the tickets (see above), so the archive records the real breakdown:
+
+```txt
+grill-with-docs → to-spec → to-proposal → to-tickets → implement → archive-proposal
+                                              └─ rewrites tasks.md to mirror the tickets
 ```
 
 It sits between [to-spec](https://aihero.dev/skills-to-spec), which hands it a settled spec with user stories to slice against, and [implement](https://aihero.dev/skills-implement), which builds each ticket, driving [tdd](https://aihero.dev/skills-tdd) internally to write the tests test-first, before its [code-review](https://aihero.dev/skills-code-review) pass. Work the frontier one ticket per fresh context, clearing between them. When you're unsure which skill or flow fits, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.
