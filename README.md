@@ -18,6 +18,8 @@ Developing real applications is hard. Approaches like GSD, BMAD, and Spec-Kit tr
 
 These skills are designed to be small, easy to adapt, and composable. They work with any model. They're based on decades of engineering experience. Hack around with them. Make them your own. Enjoy.
 
+This fork also includes an **optional OpenSpec lifecycle**: `/to-proposal` records the resolved conversation as an in-repo OpenSpec change, and `/archive-proposal` delegates the finished change to `openspec archive` so the project's specs evolve over time. The shared `openspec/config.yaml` selects only the standard `spec-driven` schema; Matt-specific workflow rules stay in the skill files, so teammates can use OpenSpec independently without inheriting those rules.
+
 If you want to keep up with changes to these skills, and any new ones I create, you can join ~60,000 other devs on my newsletter:
 
 [Sign Up To The Newsletter](https://www.aihero.dev/s/skills-newsletter)
@@ -78,6 +80,7 @@ In your agent, run it once per repo. It will:
 - Ask you which issue tracker you want to use (GitHub, Linear, or local files)
 - Ask you what labels you apply to tickets when you triage them (`/triage` uses labels)
 - Ask you where you want to save any docs we create
+- When `/to-proposal` or `/archive-proposal` is installed, optionally initialize OpenSpec with its standard `spec-driven` schema. Existing team config is never overwritten, and Matt-specific rules stay in the skills.
 
 ### 3. Bam - you're ready to go.
 
@@ -195,7 +198,7 @@ Skills I use daily for code work.
 - **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)** — Grilling session that also builds your project's domain model, sharpening terminology and updating `CONTEXT.md` and ADRs inline.
 - **[triage](./skills/engineering/triage/SKILL.md)** — Move issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.md)** — Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
-- **[setup-matt-pocock-skills](./skills/engineering/setup-matt-pocock-skills/SKILL.md)** — Configure this repo for the engineering skills (issue tracker, triage labels, domain doc layout). Run once per repo before using the other engineering skills.
+- **[setup-matt-pocock-skills](./skills/engineering/setup-matt-pocock-skills/SKILL.md)** — Configure this repo for the engineering skills (issue tracker, triage labels, domain doc layout, and optional standard OpenSpec instance). Run once per repo before using the other engineering skills.
 - **[to-spec](./skills/engineering/to-spec/SKILL.md)** — Turn the current conversation into a spec and publish it to the issue tracker. No interview — just synthesizes what you've already discussed.
 - **[to-tickets](./skills/engineering/to-tickets/SKILL.md)** — Break any plan, spec, or conversation into a set of tracer-bullet tickets, each declaring its blocking edges — written as text in a local file, or as native blocking links on a real tracker.
 - **[to-proposal](./skills/engineering/to-proposal/SKILL.md)** — Sink the current conversation into an OpenSpec change (proposal, design, delta specs, tasks) that lives in the repo and evolves across changes — the in-repo counterpart to `/to-spec`.

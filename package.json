@@ -2,7 +2,7 @@
   "name": "mattpocock-skills",
   "version": "1.2.1",
   "private": true,
-  "description": "Matt Pocock's agent skills for real engineering",
+  "description": "Matt Pocock's agent skills for real engineering, with optional OpenSpec lifecycle support",
   "repository": {
     "type": "git",
     "url": "https://github.com/mattpocock/skills"
