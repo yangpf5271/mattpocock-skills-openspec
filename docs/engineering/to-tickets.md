@@ -29,7 +29,7 @@ A **horizontal** slice ships one layer of the change. Nothing works until every 
 
 This is the rule people break most often, and the consequences are well documented. One team ran a 26-ticket stack sliced by layer — corpus, producer, aggregator, selector — and got roughly twenty agent runs per closed ticket, about three quarters of them rework. Their own post-mortem traced every failure class back to the horizontal slicing rather than to the implementations.
 
-Two things happen before anything is published. `to-tickets` looks for prefactoring — "make the change easy, then make the easy change" — and orders that work first. It then checks the breakdown for coherent vertical slices and defensible blocking edges and publishes directly. It stops for user input only when requirements conflict, a missing business rule changes the breakdown, tracker configuration is ambiguous, or revising an OpenSpec checklist would change agreed scope or discard completed work.
+Two things happen before anything is published. `to-tickets` looks for prefactoring — "make the change easy, then make the easy change" — and orders that work first. Then it presents the breakdown as a numbered list and quizzes you on it: is the granularity right, are the blocking edges real, should anything merge or split. In an OpenSpec flow, the preview also shows any proposed `tasks.md` boundary or checkbox changes while preserving completed work and existing links. Nothing reaches the tracker until you approve.
 
 ## Blocking edges
 
@@ -57,10 +57,10 @@ Where even the batches can't stay green alone, they share an integration branch 
 ## Common questions
 
 **It produced twelve tickets for a three-line change.**
-Over-decomposition is a known model failure. This fork does not pause for a breakdown preview because ticket granularity and blocking edges are the skill's responsibility. If the whole change fits one context window, the better route is [implement](https://aihero.dev/skills-implement) without tickets. If requirements make the boundary genuinely ambiguous, the skill stops before publishing instead of guessing.
+Over-decomposition is the most reported friction on this skill, and it is consistent across practitioners: the [model](https://www.aihero.dev/ai-coding-dictionary/model) defaults to atomic units and loses the grouping that would make them meaningful. The preview step exists for exactly this — ask it to merge before approving. The deeper answer is that the tickets have a floor: if the whole change fits in one context window, you don't need this skill at all. Go straight to [implement](https://aihero.dev/skills-implement).
 
 **The tickets came out one per layer — all the schema in one, all the API in another.**
-This is the failure the vertical-slice rule is written against. Each ticket needs an answer to one question: what can I demo when this is done? A ticket with no answer is a horizontal slice and should not be published. In an OpenSpec flow, the same test applies when `tasks.md` is first created; `to-tickets` preserves valid groups and only revises checklist boundaries deliberately when they are not ticket-sized.
+This is the failure the vertical-slice rule is written against, and the skill still produces it sometimes. Catch it in the preview by asking one question per ticket: what can I demo when this is done? A ticket with no answer is a horizontal slice. In an OpenSpec flow, the same test applies to proposed `tasks.md` revisions before you approve them.
 
 **On GitHub the tickets weren't created as sub-issues of the spec issue.**
 Known and unfixed. It has been reported across a dozen runs and several models, [most fully in issue #554](https://github.com/mattpocock/skills/issues/554), and it is worse on Codex than on Claude. `gh` has supported this natively since v2.94: `gh issue create --parent <n>`, and `gh issue edit <parent> --add-sub-issue <n>` after the fact. Until the tracker template prefers those, wiring the parent links yourself after a run is the reliable move.
@@ -83,8 +83,8 @@ The skill stops at the artifact, and there is no auto-dispatch mode. Matt's own 
 ## It's working if
 
 - Every ticket has an answer to "what can I demo when this is done?" — and the answer is behaviour, not a layer.
-- Tickets are published directly once the breakdown is internally coherent; a run stops first only for a real requirement, tracker, or scope blocker.
-- In an OpenSpec flow, each ticket maps to one numbered `tasks.md` group and a plain `**Ticket:**` backlink prevents duplicates on rerun.
+- The list comes back to you numbered, with a "Blocked by" line on each, before anything is published; tracker writes begin only after you approve.
+- In an OpenSpec flow, each approved ticket maps to one numbered `tasks.md` group and a plain `**Ticket:**` backlink prevents duplicates on rerun.
 - The ticket at the top has no blockers and can be started immediately.
 - Nothing in a ticket body is a file path or a line number, except a snippet a prototype produced.
 - Each ticket reads like something a fresh session could finish without you in the room.

@@ -39,7 +39,7 @@ If this **is** an OpenSpec flow, start from `openspec/changes/<name>/tasks.md` i
 - Add **Blocked by** edges from the ordering and the actual dependency logic; don't assume every earlier group blocks every later group.
 - If a group already has a `**Ticket:** <url-or-path>` line, do not create a duplicate ticket. Plan to update the existing ticket if needed, or skip it if it is already correct.
 
-Only split, merge, reorder, add, or remove OpenSpec checkbox items when the existing `tasks.md` is not a valid ticket-sized vertical-slice plan, or when it is missing required work that belongs in the OpenSpec archive record. Treat this as a revision to the OpenSpec implementation checklist, not as ordinary ticket backlinking. When you do change checklist boundaries or checkbox items, update `tasks.md` first, preserving any completed `- [x]` items and existing ticket links that still apply; then publish from the updated groups. Stop for user input only if the revision would change agreed scope, discard completed work, or depends on missing/contradictory requirements.
+Only split, merge, reorder, add, or remove OpenSpec checkbox items when the existing `tasks.md` is not a valid ticket-sized vertical-slice plan, when it is missing required work that belongs in the OpenSpec archive record, or when the user approves the change during the preview. Treat this as a proposed revision to the OpenSpec implementation checklist, not as ordinary ticket backlinking. Include the exact revision in the preview, preserving any completed `- [x]` items and existing ticket links that still apply. After the user approves, update `tasks.md` first, then publish from the approved groups.
 
 <vertical-slice-rules>
 
@@ -54,20 +54,35 @@ Give each ticket its **blocking edges** — the other tickets that must complete
 
 **Wide refactors are the exception to vertical slicing.** A **wide refactor** is one mechanical change — rename a column, retype a shared symbol — whose **blast radius** fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don't force it into a tracer bullet; sequence it as **expand–contract**. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can't stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket — green is promised only there.
 
-### 4. Stop only when blocked
+### 4. Quiz the user
 
-Do not present the breakdown for the user to judge before publishing. Most users cannot reliably evaluate ticket granularity or blocking edges from a preview; that is this skill's job.
-
-Proceed directly to publishing/updating/reusing tickets once the breakdown is internally coherent. Stop and ask the user only when you cannot make a defensible decision from the spec, codebase, or tracker state, for example:
+Before presenting the preview, stop, ask the user for clarification, and wait when any condition prevents a defensible or publishable breakdown. Do not guess through these blockers:
 
 - The source requirements contradict each other.
 - A missing business rule changes what should be built.
 - The tracker configuration is missing or ambiguous.
-- Revising OpenSpec checkbox items would change agreed scope or discard completed work.
+- A proposed OpenSpec revision would discard completed work rather than preserve it.
 
-### 5. Publish, update, or reuse the tickets on the configured tracker
+Then present the proposed breakdown as a numbered list. For each ticket, show:
 
-Publish the tickets, or update/reuse existing linked tickets when this is an OpenSpec rerun. **How** depends on the tracker `/setup-matt-pocock-skills` configured — the tickets are the same either way, only the shape of the blocking edges changes:
+- **Title**: short descriptive name
+- **Blocked by**: which other tickets (if any) must complete first
+- **What it delivers**: the end-to-end behaviour this ticket makes work
+
+For an OpenSpec flow, also identify any checklist groups or checkbox items that would be split, merged, reordered, added, or removed. Preserve completed `- [x]` items and existing ticket links in the preview so the user can see exactly what would change before publishing.
+
+Ask the user:
+
+- Does the granularity feel right? (too coarse / too fine)
+- Are the blocking edges correct — does each ticket only depend on tickets that genuinely gate it?
+- Should any tickets be merged or split further?
+- For an OpenSpec flow, are the proposed `tasks.md` revisions correct?
+
+Iterate until the user approves the breakdown. Do not publish, update, or reuse tracker tickets before approval.
+
+### 5. Publish, update, or reuse the approved tickets on the configured tracker
+
+Publish the approved tickets, or update/reuse existing linked tickets when this is an OpenSpec rerun. **How** depends on the tracker `/setup-matt-pocock-skills` configured — the tickets are the same either way, only the shape of the blocking edges changes:
 
 - **Local files** → write one file per new ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). If the matching OpenSpec group already has a `**Ticket:**` local path, update that file in place or skip it if already correct; do not create a second file for the same group. Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-ticket file template below — one ticket per file, never a single combined file.
 - **A real issue tracker (GitHub, Linear, …)** → publish one new issue per unlinked ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. If the matching OpenSpec group already has a `**Ticket:**` URL, update that issue if needed or skip it if already correct; do not create a duplicate issue. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the `ready-for-agent` triage label unless instructed otherwise — the tickets are agent-grabbable by construction.
