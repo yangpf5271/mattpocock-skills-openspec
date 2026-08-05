@@ -12,11 +12,11 @@ This repo uses [OpenSpec](https://github.com/Fission-AI/OpenSpec) as the in-repo
 
 ## When a skill says "create an OpenSpec change" (`/to-proposal`)
 
-Run `openspec new change "<name>"` from the repo root, then fill the artifacts it scaffolds under `openspec/changes/<name>/`.
+Run `/to-proposal`; it creates the change and fills the schema-required artifacts under `openspec/changes/<name>/`.
 
 ## When a skill says "archive an OpenSpec change" (`/archive-proposal`)
 
-Sync any delta specs under `openspec/changes/<name>/specs/` into `openspec/specs/`, then move the change to `openspec/changes/archive/YYYY-MM-DD-<name>/`.
+Run `/archive-proposal`; after preflight and confirmation it delegates the sync and move to `openspec archive`.
 
 ## CLI
 

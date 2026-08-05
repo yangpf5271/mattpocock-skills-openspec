@@ -1,56 +1,50 @@
-Quickstart:
-
-```bash
-npx skills add yangpf5271/mattpocock-skills-openspec --skill=archive-proposal
-```
-
-```bash
-npx skills update archive-proposal
-```
-
-[Source](https://github.com/yangpf5271/mattpocock-skills-openspec/tree/main/skills/engineering/archive-proposal)
-
 ## What it does
 
-`archive-proposal` finalizes a finished OpenSpec change: it pre-flights that the change is actually done, gets your go-ahead, then **delegates the merge-and-file to `openspec archive`** — the CLI syncs the change's delta specs into the project's main `openspec/specs/` and files the change under `openspec/changes/archive/YYYY-MM-DD-<name>/`.
+`archive-proposal` finalizes a finished OpenSpec change. It checks artifact and task completion, gets explicit confirmation, then delegates to `openspec archive --yes`. The CLI syncs the change's delta specs into `openspec/specs/` and files the change under `openspec/changes/archive/YYYY-MM-DD-<name>/`.
 
-This is the step that turns a one-off change into a **permanent part of the spec's source of truth**. Without it, every new [to-proposal](https://aihero.dev/skills-to-proposal) would rewrite specs from scratch; with it, each proposal is a delta against living, accumulated truth.
+This turns a completed change into part of the spec's living baseline. The skill never reimplements OpenSpec's merge or move rules by hand.
 
 ## When to reach for it
 
-You invoke this by typing `/archive-proposal` — the agent won't reach for it on its own.
+You invoke this by typing `/archive-proposal`; the agent will not reach for it on its own.
 
-Reach for it once a change's tasks are done (worked through by [implement](https://aihero.dev/skills-implement)) and you want to close the loop. It is the closing move of the spec lifecycle that [to-proposal](https://aihero.dev/skills-to-proposal) opens — the two are a pair. Don't reach for it mid-implementation; it only makes sense once the change is genuinely complete.
+Use it after [implement](https://aihero.dev/skills-implement) has completed the change and every applicable `tasks.md` checkbox reflects reality. It is the closing move paired with [to-proposal](https://aihero.dev/skills-to-proposal), not an implementation step.
 
-## Prerequisites
+The OpenSpec CLI and an active change under `openspec/changes/` are prerequisites. [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) records the instance location and can guide CLI installation.
 
-- The OpenSpec CLI on PATH (`npm install -g @fission-ai/openspec`).
-- A change under `openspec/changes/` (created by [to-proposal](https://aihero.dev/skills-to-proposal)). [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) records the instance location and guides CLI installation if needed.
+## Common questions
 
-## How it merges the delta
+**What if tasks or artifacts are incomplete?**
 
-`archive-proposal` pre-flights completion (artifacts + tasks) and asks for your confirmation, then hands the merge to `openspec archive`. The CLI owns the delta semantics — you never re-implement them:
+The skill reports the incomplete work before asking for confirmation. OpenSpec may permit archiving with warnings, but the user sees those warnings and makes the decision explicitly.
 
-- **ADDED Requirements** — appended to `openspec/specs/<capability>/spec.md`.
-- **MODIFIED Requirements** — the matching block replaced **in full** (partial merges silently lose detail, so the CLI never merges partially).
-- **REMOVED Requirements** — the matching block dropped.
-- **RENAMED Requirements** — the `FROM:` / `TO:` rename applied.
+**Does the skill merge ADDED and MODIFIED requirements itself?**
 
-The CLI shows you a summary of every change before applying, and warns (but doesn't block) on incomplete artifacts or tasks — mirroring the pre-flight the skill already did. If you need to skip the sync, use the CLI's `--skip-specs` flag.
+No. It calls `openspec archive`, which owns ADDED, MODIFIED, REMOVED, and RENAMED semantics. Keeping those rules in the CLI prevents this skill from drifting from the installed OpenSpec version.
+
+**Why pass `--yes` if confirmation is required?**
+
+The skill obtains confirmation first, then uses `--yes` only to prevent a second CLI prompt for the same outward-facing archive action.
+
+**Can I archive without syncing specs?**
+
+Use OpenSpec's `--skip-specs` option only when that is an intentional exception. The normal lifecycle syncs the deltas so the next proposal starts from updated truth.
 
 ## It's working if
 
-- It checks artifact and task completion first, and warns (but doesn't block) if anything is incomplete.
-- It delegates the sync to `openspec archive` rather than merging delta specs by hand.
-- The change lands at `openspec/changes/archive/YYYY-MM-DD-<name>/` and `openspec list` no longer shows it as active.
+- It reports artifact and task completion before performing the archive.
+- It obtains one explicit confirmation after showing any warnings.
+- The trace shows `openspec archive`, not hand-written delta merging or filesystem moves.
+- The change lands under `openspec/changes/archive/YYYY-MM-DD-<name>/` and no longer appears as active.
+- `openspec/specs/` reflects the archived delta unless `--skip-specs` was explicitly chosen.
 
 ## Where it fits
 
-`archive-proposal` is the closing step of the spec lifecycle:
+`archive-proposal` closes both OpenSpec implementation paths:
 
-```txt
+```text
 to-proposal → implement → archive-proposal
-                            └─ openspec archive merges delta into openspec/specs/
+to-proposal → to-tickets → implement → archive-proposal
 ```
 
-Reach for it after implementation completes. Its key neighbour is [to-proposal](https://aihero.dev/skills-to-proposal), which creates the change that `archive-proposal` files — together they form the loop that keeps the repo's specs evolving across changes. When you're unsure which skill or flow fits, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.
+[to-proposal](https://aihero.dev/skills-to-proposal) creates the change, [implement](https://aihero.dev/skills-implement) keeps `tasks.md` accurate as work lands, and this skill delegates the final merge and filing to OpenSpec. [ask-matt](https://aihero.dev/skills-ask-matt) routes the full lifecycle.

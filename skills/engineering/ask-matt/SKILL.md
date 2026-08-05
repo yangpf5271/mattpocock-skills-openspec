@@ -14,24 +14,24 @@ A **flow** is a path through the skills. Most paths run along one **main flow**,
 
 The route most work travels. You have an idea and want it built.
 
-1. **`/grill-with-docs`** — sharpen the idea by interview. Start here when you **have a codebase**: it's stateful, retaining what it learns in `CONTEXT.md` and ADRs. (No codebase? Use `/grill-me` — see Standalone. Both run the same `/grilling` primitive; `grill-with-docs` is the one that leaves a paper trail.)
-2. **Branch — can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by **`/handoff`** in both directions (see Crossing sessions):
+1. **`/grill-with-docs`** — sharpen the idea by interview. Start here whenever you are **working in a working directory**: it's stateful, retaining what it learns in `CONTEXT.md` and ADRs. (No working directory? Use `/grill-me` — see Standalone. Both run the same `/grilling` primitive; `grill-with-docs` is the one that leaves a paper trail, which makes it the better of the two whenever a repo is there to leave it in.)
+2. **Branch — can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by **`/handoff`** in both directions (a prototype lives in its own directory, which is exactly what `/handoff` is for — see Phase boundaries):
    - **`/handoff`** out, then open a fresh session against that file,
    - **`/prototype`** to answer the question with throwaway code,
    - **`/handoff`** back what you learned, and reference it from the original idea thread.
 3. **Branch — is this a multi-session build?**
-   - **Yes** → **`/to-spec`** (turn the thread into a spec), then **`/to-tickets`** to split it into tracer-bullet tickets, each declaring its **blocking edges**. On a local tracker that's one file per ticket under `.scratch/<feature>/issues/`, worked blockers-first by hand; on a real tracker the edges become native blocking links, so any ticket whose blockers are done can be grabbed — kick off **`/implement`** per ticket, **clearing context between each one**.
+   - **Yes** → **`/to-spec`** (turn the thread into a spec), then **`/to-tickets`** to split it into tracer-bullet tickets, each declaring its **blocking edges**. On a local tracker that's one file per ticket under `.scratch/<feature>/issues/`, worked blockers-first by hand; on a real tracker the edges become native blocking links, so any ticket whose blockers are done can be grabbed — kick off **`/implement`** per ticket, **`/clear`ing context between each one**. Each ticket is self-contained, so the last one's context is disposable.
 
-     Want the spec to live **in the repo as an evolving source of truth**, not just on the tracker? After (or instead of) `/to-spec`, run **`/to-proposal`** — it sinks the same thinking into an OpenSpec change at `openspec/changes/<name>/` (proposal, design, delta specs, and an OpenSpec `tasks.md` checklist of vertical slices). For lightweight work, `/implement` can work that checklist directly. When you need tracker tickets, run **`/to-tickets`**: it promotes each `tasks.md` group into a ticket by adding tracker-specific fields (Blocked by, status/label, tracker identity) and links the ticket back to the checklist. Implement the tasks (via `/implement` — with tickets, drive ticket state first and then check the matching `tasks.md` lines; without tickets, work directly from `tasks.md`), then **`/archive-proposal`** delegates the merge-and-file to `openspec archive`, syncing the change's delta into `openspec/specs/` and filing the change under `openspec/changes/archive/`. See **Spec lifecycle** below for why this loop matters.
+     Want the spec to live **in the repo as an evolving source of truth**, not just on the tracker? After (or instead of) `/to-spec`, run **`/to-proposal`**. It creates an OpenSpec change at `openspec/changes/<name>/` with proposal, design, delta specs, and a `tasks.md` checklist of vertical slices. For lightweight work, `/implement` can work that checklist directly. For tracker collaboration, `/to-tickets` promotes each checklist group into a ticket and writes its backlink. Implement the tasks, then **`/archive-proposal`** delegates the merge and filing to `openspec archive`. See **Spec lifecycle** below.
    - **No** → **`/implement`** right here, in the same context window.
 
    Either way, **`/implement`** builds each issue by driving **`/tdd`** internally — one red-green slice at a time — then closes out by running **`/code-review`**, a two-axis review (Standards + Spec) of the diff, before committing. Reach for **`/tdd`** on its own when you just want to build a concrete behaviour test-first without a full spec, and **`/code-review`** on its own whenever you want to review a branch or PR against a fixed point.
 
 ### Context hygiene
 
-Keep steps 1–3 in **one unbroken context window** — don't compact or clear until after `/to-tickets`, or after `/to-proposal` if you're taking the lightweight OpenSpec path straight to `/implement` — so the grilling, spec, and ticket/checklist boundary all build on the same thinking. Each `/implement` then starts fresh, working from the ticket or the OpenSpec checklist.
+Keep steps 1–3 in **one unbroken context window** — don't compact or clear until after `/to-tickets`, or after `/to-proposal` on the lightweight OpenSpec path — so the grilling, spec, and ticket/checklist boundary all build on the same thinking. Each `/implement` then starts fresh, working from the ticket or OpenSpec checklist.
 
-The limit on this is the **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**: the window (~120k tokens on state-of-the-art models) within which the model still reasons sharply. If a session approaches it before `/to-tickets`, don't push on degraded — `/handoff` and continue in a fresh thread.
+The limit on this is the **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**: the window (~150k tokens on state-of-the-art models) within which the model still reasons sharply. If a session approaches it before `/to-tickets`, don't push on degraded — `/compact` at the nearest phase boundary and carry on (see Phase boundaries).
 
 ## On-ramps
 
@@ -60,47 +60,48 @@ Two model-invoked references that run *beneath* the other skills — each the si
 - **`/domain-modeling`** — sharpen the project's *domain* language: challenge a fuzzy term, resolve an overloaded word ("account" doing three jobs), record a hard-to-reverse decision as an ADR. It's the active discipline `/grill-with-docs` drives to keep `CONTEXT.md` a clean glossary.
 - **`/codebase-design`** — the deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) for designing a module's *shape*: a lot of behaviour behind a small interface at a clean seam. `/tdd` and `/improve-codebase-architecture` both speak it.
 
-## Crossing sessions
+## Phase boundaries
 
-- **`/handoff`** — when a thread is full or you need to branch off (e.g. into a `/prototype` session), this compacts the conversation into a markdown file. You don't continue in place — you **open a new session and reference that file** to carry the context across. It's the bridge between context windows, in either direction. Use it when you want a **fresh session** but need the **current conversation preserved**.
-- **`/compact`** (built-in) — stay in the **same conversation**, letting the earlier turns be summarized. Use it at **intentional breaks between phases**, when you don't mind losing the verbatim history. Don't compact mid-phase — the agent can lose its way. `/handoff` forks; `/compact` continues.
+A **phase** is a chunk of work inside a session — the grilling, the implementation, the QA. At the **boundary** between two of them you have five options, and picking between them is the fuzziest decision in this whole map:
+
+- **Continue** — stay put. Costs nothing, loses nothing.
+- **`/clear`** — empty the window, when nothing here matters to what's next.
+- **`/handoff`** — write a portable markdown file. Narrow: only for a **new harness**, a **new directory**, a **colleague**, or forking a side task **mid-phase**. What it buys is portability.
+- **Subagent** — send a tightly-scoped task to its own window and get a report back.
+- **`/compact`** — compress this context and seed a fresh session with it. The **default**, at the bottom of the tree rather than the first reach.
+
+Read [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) for the ordered tree — the five questions, the reasoning behind each branch, and why the primary-source cost makes **Continue** the one to rule out first. Make the decision **at** a boundary; mid-phase, continue or split the rest into subagents.
 
 ## Standalone
 
 Off the main flow entirely.
 
-- **`/grill-me`** — the same relentless interview as `/grill-with-docs`, but for when you have **no codebase**. Stateless: it saves nothing locally, builds no `CONTEXT.md`. Reach for it to sharpen any plan or design that doesn't live in a repo.
-- **`/prototype`** — a small, throwaway program that answers one design question: does this state model feel right, or what should this UI look like. Throwaway from day one — keep the answer, delete the code. It's the detour in step 2 of the main flow, but reach for it any time a design question is hard to settle on paper.
+- **`/grill-me`** — the same relentless interview as `/grill-with-docs`, but **stateless**: it saves nothing locally and builds no `CONTEXT.md`. Reach for it when you are **not working in a working directory** — sharpening a plan, a design, a piece of writing, anything with no repo under it. If you are in a working directory, use `/grill-with-docs` instead: it runs the same interview and leaves a paper trail, so it is strictly the better one.
+- **`/grilling`** — the interview primitive itself: rounds, the frontier, facts are the agent's job and decisions are yours. `/grill-me` and `/grill-with-docs` are the two named ways in, and `/triage`, `/wayfinder` and `/improve-codebase-architecture` all run it internally. Reach for it directly only when you want the interview with no wrapper around it.
+- **`/resolving-merge-conflicts`** — work an in-progress merge or rebase conflict hunk by hunk, resolving by **intent** traced to each side's primary source rather than by picking lines, then finish the operation. It never runs `--abort`. Standalone and off every flow: reach for it when you are already mid-conflict.
+- **`/prototype`** — a small, throwaway program that answers one design question: does this state model feel right, or what should this UI look like. Throwaway is a constraint on how the code is written, not a promise to destroy it: the answer folds into the real code, and the prototype itself is kept as a **primary source** on a `prototype/<name>` branch out of main, pointed at from the implementation issue. It's the detour in step 2 of the main flow, but reach for it any time a design question is hard to settle on paper.
 - **`/research`** — delegate reading legwork to a **background agent**: it investigates a question against **primary sources**, then leaves a cited Markdown file in the repo. Keep working while it reads. The file it produces is something to take *into* the main flow at `/grill-with-docs` — research feeds the thinking, it doesn't replace it.
+- **`/to-questionnaire`** — when the thing blocking you isn't in your head or the codebase but in **someone else's**, this writes them a questionnaire to fill in. It's the inverse of `/grill-me`: instead of interviewing you about the subject, it interviews you about the **send** — who it's going to, what you need back — and aims the questions at the gap. What comes back is material for `/grill-with-docs` or `/to-spec`.
+- **`/wizard`** — for the steps only a **human** can take: provisioning infrastructure, setting up credentials or CI secrets, clicking through an unfamiliar third-party dashboard, running a one-off migration or cutover. It generates an interactive bash script that opens each URL, captures each value, and writes it into `.env` and GitHub secrets — so the procedure stops being something you re-explain to an agent every time. Model-invoked, so the agent reaches for it the moment it hits a wall only you can pass. If the agent could just do it itself, it should; this is for where a human is genuinely in the loop.
+- **`/wait-what`** — the corrective for a message that didn't land. Use it mid-conversation, inside any other skill, and the agent re-pitches what it just said with the context you were missing, in plain English, using the `CONTEXT.md` vocabulary. It works after the fact; `/grill-with-docs` is the upfront cure, because a shared language agreed early is what stops the jargon arriving at all.
 - **`/teach`** — learn a concept over multiple sessions, using the current directory as a stateful workspace.
-- **`/writing-great-skills`** — reference for writing and editing skills well.
+- **`/writing-for-agents`** — reference for writing documents agents consume: skills, AGENTS.md, pointed-at docs.
 
 ## Spec lifecycle
 
-An **optional** loop layered on the main flow for projects that want their specs to live **in the repo** and **evolve across changes**, rather than living only on the issue tracker. It needs the OpenSpec CLI and an instance initialized by `/setup-matt-pocock-skills` (see Precondition).
+An **optional** loop layered on the main flow for projects that want specs to live in the repo and evolve across changes. It requires an OpenSpec instance initialized by `/setup-matt-pocock-skills`.
 
-```
-Lightweight OpenSpec:
-/to-spec ──▶ /to-proposal ──▶ /implement ──▶ /archive-proposal
-(thread)     openspec/         (work/check     openspec archive:
-             changes/<name>/    tasks.md)      merge delta into
-             proposal+design+                  openspec/specs/,
-             delta specs+                     file under archive/
-             tasks.md checklist)
-
-Ticketed OpenSpec:
-/to-spec ──▶ /to-proposal ──▶ /to-tickets ──▶ /implement ──▶ /archive-proposal
-                           (promote tasks.md   (drive ticket,
-                            groups into         then check
-                            tracker tickets;    tasks.md)
-                            write backlinks)
+```text
+Lightweight: /to-spec → /to-proposal → /implement → /archive-proposal
+Ticketed:    /to-spec → /to-proposal → /to-tickets → /implement → /archive-proposal
 ```
 
-- **`/to-proposal`** — takes the grilling/spec thread and writes it into `openspec/changes/<name>/` as `proposal.md` + `design.md` + delta `specs/<capability>/spec.md` + an OpenSpec `tasks.md` checklist. The checklist is vertical slices grouped under `## N.` headings with checkbox acceptance/completion items. Same synthesis job as `/to-spec`, but the output is the repo, not the tracker — so the spec becomes auditable in version control alongside the code.
-- **`/to-tickets`** — optional in the OpenSpec loop: use it when the checklist needs tracker tickets for collaboration, blocking edges, assignment, or one-ticket-per-context implementation. It reads `tasks.md`, treats each vertical group as a ticket candidate, adds ticket-specific fields, publishes to the tracker, and writes a plain `**Ticket:** ...` backlink under the matching group. It only changes `tasks.md` boundaries when the checklist is not ticket-sized or missing required archive-record work; it stops for input only if that revision would change agreed scope, discard completed work, or depends on missing/contradictory requirements.
-- **`/archive-proposal`** — once the tasks are done, pre-flights completion, gets your go-ahead, then **delegates to `openspec archive`**: the CLI syncs the change's delta into the main `openspec/specs/` (ADDED appended, MODIFIED replaced in full, REMOVED dropped) and moves the change to `openspec/changes/archive/YYYY-MM-DD-<name>/`. The merge rules are OpenSpec's, never re-implemented by hand.
+- **`/to-proposal`** writes the resolved thread into `openspec/changes/<name>/` as proposal, design, delta specs, and a vertical-slice `tasks.md` checklist.
+- **`/to-tickets`** is optional in this loop. It promotes checklist groups into tracker tickets and writes plain `**Ticket:**` backlinks without turning `tasks.md` into the tracker.
+- **`/implement`** works directly from `tasks.md` when no tickets exist. With tickets, it drives tracker state first, then checks the matching `tasks.md` lines.
+- **`/archive-proposal`** pre-flights completion, gets confirmation, and delegates to `openspec archive`, which syncs the deltas into `openspec/specs/` and files the change.
 
-Why bother when `/to-spec` + `/to-tickets` already work? Because the **next** change then builds on specs that already reflect the last one — `/to-proposal` reads the current `openspec/specs/` as its baseline, so each proposal is a delta against living truth, not a rewrite from scratch. Reach for this loop on projects where the spec is long-lived and many changes stack; skip it for one-off work the tracker already captures. Within the loop, `/to-tickets` is optional: skip it for lightweight solo implementation from `tasks.md`, use it when the work needs tracker-native collaboration.
+Use this loop when later changes should build on living specs. Skip it when a one-off tracker spec is enough.
 
 ## Precondition
 
