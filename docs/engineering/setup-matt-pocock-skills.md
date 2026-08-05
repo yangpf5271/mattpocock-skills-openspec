@@ -44,11 +44,11 @@ The tracker options:
 | **GitHub** | the repo's GitHub Issues | the `gh` CLI |
 | **GitLab** | the repo's GitLab Issues | the `glab` CLI |
 | **Local markdown** | files under `.scratch/<feature>/` in this repo | nothing — no remote at all |
-| **Other** | wherever you say | one paragraph from you describing the workflow |
+| **Other** | wherever you say | a workflow describing read, create, update, close, reopen, status/labels, and dependency read/add/remove operations |
 
 The first three ship as templates in the skill and work out of the box. Local markdown is a first-class option, not a fallback: a solo project with no remote is fully supported. Matt's caveat is worth repeating though — *"Don't use local markdown if you're using GitHub."* They are alternatives, not layers.
 
-"Other" is not a stub either. It is the reason Jira, Linear, Azure DevOps and Beads all work: you describe the workflow, the skill records your prose in `docs/agents/issue-tracker.md`, and the downstream skills follow the prose. The community has already done this — a Jira-over-[MCP](https://www.aihero.dev/ai-coding-dictionary/mcp) variant, a Gitea CLI shaped like `gh`, a hand-built local dashboard.
+"Other" is not a stub either. It is the reason Jira, Linear, Azure DevOps and Beads all work: you describe how to read, create, update, close, reopen, change status/labels, and read, add, or remove dependency edges; the skill records that workflow in `docs/agents/issue-tracker.md`, and downstream skills follow it. Missing operations are recorded explicitly so a reconciliation flow stops and asks rather than guessing.
 
 ## Common questions
 
