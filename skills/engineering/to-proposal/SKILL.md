@@ -1,6 +1,6 @@
 ---
 name: to-proposal
-description: Turn the current conversation into an OpenSpec change proposal — proposal, design, specs, and tasks — that lives in the repo and evolves across changes. No interview, just synthesis of what you've already discussed.
+description: 生成 OpenSpec 提案：Turn the current conversation into an OpenSpec change proposal — proposal, design, specs, and tasks — that lives in the repo and evolves across changes. No interview, just synthesis of what you've already discussed.
 disable-model-invocation: true
 ---
 
