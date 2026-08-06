@@ -19,7 +19,7 @@ Reach for it when the build is too big for one agent [session](https://www.aiher
 
 ## Prerequisites
 
-`to-spec` publishes the spec as an issue, so [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) must have configured a tracker and the triage-label vocabulary for this repo first. Either kind works: a real tracker like GitHub, or local markdown files under `.scratch/`, which is supported out of the box.
+`to-spec` publishes the spec as a tracker artifact. If [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) has recorded a tracker in `docs/agents/issue-tracker.md`, it uses that workflow. If no tracker config exists, it uses the local markdown fallback instead and writes `.scratch/<feature-slug>/spec.md`, with `ready-for-agent` as the default status/label string. This lets public projects use the skill locally without committing personal tracker configuration.
 
 ## The spec is a decision record
 

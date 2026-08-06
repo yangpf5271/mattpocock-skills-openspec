@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Break a plan, spec, or conversation into a set of **tickets** — tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not. The exception is an OpenSpec change whose tasks are already all complete and have never been promoted; that path performs no tracker operations.
+Read `docs/agents/issue-tracker.md` if it exists. If it does not exist, do not require `/setup-matt-pocock-skills`; default to the local markdown tracker convention and publish tickets under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`. Use `ready-for-agent` as the default open status when `docs/agents/triage-labels.md` is also absent. Run `/setup-matt-pocock-skills` only when the user wants a real tracker, custom label vocabulary, or recorded domain-doc layout. The exception is an OpenSpec change whose tasks are already all complete and have never been promoted; that path performs no tracker operations.
 
 When this flow runs with OpenSpec (`/to-proposal` produced an OpenSpec change at `openspec/changes/<name>/`), `tasks.md` remains the OpenSpec implementation checklist and archive record. Its numbered groups own the vertical-slice boundaries and completion state. Once the change is promoted, each group maps to one tracker ticket; the ticket adds executable detail, blocking edges, status, assignment, comments, and tracker identity. OpenSpec is the archive; the tracker is the collaboration surface.
 
@@ -20,7 +20,7 @@ Work from whatever is already in the conversation context. If the user passes a 
 
 If an OpenSpec change exists (`openspec/changes/<name>/`), read its `proposal.md`, `design.md`, delta `specs/`, and `tasks.md` before drafting anything. Parse every numbered `## N.` group and every exact `- [ ]` or `- [x]` checkbox. A group with no valid checkbox is malformed: stop and ask the user to fix the checklist rather than creating an empty ticket.
 
-Inventory every plain `**Ticket:** <url-or-path>` line. Zero backlinks under a group is the normal first-promotion state. Exactly one valid backlink owns the tracker identity and prevents duplicate creation, so fetch that linked ticket and read its body, labels/status, blocking relationships, and open/closed state. Multiple backlinks under one group are ambiguous: stop before preview or tracker writes and ask the user which identity to keep. If a recorded backlink is inaccessible, points at missing work, or targets the wrong ticket, stop and ask how to repair it; do not silently create a replacement.
+Inventory every plain `**Ticket:** <url-or-path>` line. Zero backlinks under a group is the normal first-promotion state. Exactly one valid backlink owns the tracker identity and prevents duplicate creation, so fetch that linked ticket and read its body, labels/status, blocking relationships, and open/closed state. Multiple backlinks under one group are ambiguous: stop before tracker writes and ask the user which identity to keep. If a recorded backlink is inaccessible, points at missing work, or targets the wrong ticket, stop and ask how to repair it; do not silently create a replacement.
 
 Classify each group from `tasks.md`:
 
@@ -32,7 +32,7 @@ Classify each group from `tasks.md`:
 
 If every group is complete and there are no backlinks anywhere in the change, stop here. Perform no tracker read or write, create no tickets or backlinks, and tell the user that no implementation work remains to promote and `/archive-proposal` is next.
 
-If every group is complete and at least one backlink exists, continue to the preview as a reconciliation run. Reuse linked tickets. For any unlinked group, preview a minimal completed ticket only if the user wants to finish the one-group-to-one-ticket mapping; do not create it by default.
+If every group is complete and at least one backlink exists, continue as a reconciliation run. Reuse linked tickets. For any unlinked group, create a minimal completed ticket only if the user wants to finish the one-group-to-one-ticket mapping; do not create it by default.
 
 ### 2. Explore the codebase (optional)
 
@@ -56,12 +56,12 @@ If this **is** an OpenSpec flow, start from `openspec/changes/<name>/tasks.md` i
 
 Compare linked ticket state with `tasks.md`:
 
-- Complete group + open ticket → preview closing the ticket and removing `ready-for-agent`.
-- Incomplete or partial group + closed ticket → show a conflict. Ask whether the tracker was closed incorrectly or the implementation really completed. If the tracker is wrong, preview reopening it. If the work is complete, include the proposed `tasks.md` checkbox changes in the final preview, then recalculate and show the resulting group and ticket state. Apply neither resolution until the user approves the complete preview. Never infer completion from the closed ticket alone.
+- Complete group + open ticket → close the ticket and remove `ready-for-agent`.
+- Incomplete or partial group + closed ticket → show a conflict. Ask whether the tracker was closed incorrectly or the implementation really completed. If the tracker is wrong, reopen it. If the work is complete, include the proposed `tasks.md` checkbox changes in the confirmation, then recalculate and show the resulting group and ticket state. Apply neither resolution until the user confirms. Never infer completion from the closed ticket alone.
 - Matching state and content → reuse without rewriting lifecycle state.
-- Stale title, body, criteria, or blocking edges → preview the exact update.
+- Stale title, body, criteria, or blocking edges → update the ticket.
 
-Only propose changing OpenSpec group boundaries or checkbox items when the current checklist is not a valid ticket-sized vertical-slice plan, when agreed required work is missing, or when the user explicitly asks to change the OpenSpec archive boundary. Approval is the gate for applying a justified revision, not an independent reason to rewrite a valid checklist. Show the exact revision in the preview and preserve completed `- [x]` items and valid backlinks that still apply. After approval, update `tasks.md` before publishing from the revised groups.
+Only change OpenSpec group boundaries or checkbox items when the current checklist is not a valid ticket-sized vertical-slice plan, when agreed required work is missing, or when the user explicitly asks to change the OpenSpec archive boundary. That is a justified OpenSpec checklist revision, not ordinary ticket publication. Stop for confirmation before applying the revision only when it would change agreed scope, discard completed work, or depends on missing/contradictory requirements. Preserve completed `- [x]` items and valid backlinks that still apply. When a revision is justified, update `tasks.md` before publishing from the revised groups.
 
 <vertical-slice-rules>
 
@@ -74,53 +74,31 @@ Only propose changing OpenSpec group boundaries or checkbox items when the curre
 
 **Wide refactors are the exception to vertical slicing.** A **wide refactor** is one mechanical change — rename a column, retype a shared symbol — whose **blast radius** fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don't force it into a tracer bullet; sequence it as **expand–contract**. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can't stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket — green is promised only there.
 
-### 4. Quiz the user
+### 4. Stop only when blocked
 
-Before presenting the preview, stop, ask the user for clarification, and wait when any condition prevents a defensible or publishable breakdown. Do not guess through these blockers:
+Do not present the breakdown for the user to judge before publishing. Most users cannot reliably evaluate ticket granularity or blocking edges from a preview; that is this skill's job.
+
+Proceed directly to publishing/updating/reusing tickets once the breakdown is internally coherent. Stop and ask the user only when you cannot make a defensible decision from the spec, codebase, or tracker state:
 
 - The source requirements contradict each other.
 - A missing business rule changes what should be built.
-- The tracker configuration is missing or ambiguous.
-- A proposed OpenSpec revision would discard completed work rather than preserve it.
+- `docs/agents/issue-tracker.md` exists but its workflow is incomplete or ambiguous for the needed operation.
+- A proposed OpenSpec revision would change agreed scope or discard completed work.
 - `tasks.md` and a linked ticket disagree about whether work is complete.
 
-For a non-OpenSpec flow, present the proposed breakdown as a numbered list. For each ticket, show:
+### 5. Publish, update, or reuse tickets
 
-- **Title**: short descriptive name
-- **Blocked by**: which other tickets (if any) must complete first
-- **What it delivers**: the end-to-end behaviour this ticket makes work
+Follow the tracker workflow recorded in `docs/agents/issue-tracker.md` when it exists. If it is absent, use the local markdown fallback: create/update one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, use a `Status:` line for lifecycle state, use `Blocked by:` text for dependency edges, and use `ready-for-agent` as the default open status unless `docs/agents/triage-labels.md` provides another string. Resolve the canonical `ready-for-agent` role through `docs/agents/triage-labels.md` before applying or removing a real-tracker label or setting a local open `Status:` value; when that file is absent, the canonical string is `ready-for-agent`. If a configured workflow's read/create/update/status/close/reopen or dependency read/add/remove operations are missing or ambiguous for a needed action, stop and ask instead of guessing.
 
-For an OpenSpec flow, preview every group and show:
-
-- **Progress**: completed items / total items
-- **Action**: Create, Reuse, Update, Reopen, Close as completed, or Skip the whole ticketing step
-- **Already complete**: exact completed item titles
-- **Remaining work**: unchecked item titles plus the proposed executable detail
-- **Blocked by**: the full dependency edges, marking completed blockers as satisfied
-- Any proposed `tasks.md` revision or tracker/checklist state conflict
-
-Ask the user:
-
-- Does the granularity feel right? (too coarse / too fine)
-- Are the blocking edges correct — does each ticket only depend on tickets that genuinely gate it?
-- Should any tickets be merged or split further?
-- For an OpenSpec flow, are the proposed ticket states and any justified `tasks.md` revisions correct?
-
-Iterate until the user approves the breakdown. Rejection causes no writes: do not modify `tasks.md`, create/update/reuse/close/reopen tracker tickets, add dependencies, or write backlinks before approval.
-
-### 5. Publish, update, or reuse the approved tickets
-
-Follow the tracker workflow that `/setup-matt-pocock-skills` configured. Resolve the canonical `ready-for-agent` role through `docs/agents/triage-labels.md` before applying or removing a real-tracker label or setting a local open `Status:` value; do not assume the configured string is literally `ready-for-agent`. If the workflow's read/create/update/status/close/reopen or dependency read/add/remove operations are missing or ambiguous for an action in the approved preview, stop and ask instead of guessing.
-
-Process only OpenSpec groups whose approved action is not **Skip**, in dependency order, blockers first. For each selected group:
+Process only OpenSpec groups whose action is not **Skip**, in dependency order, blockers first. For each selected group:
 
 1. Reuse the valid linked ticket, or create the minimum tracker record needed to obtain its stable URL/path.
 2. Immediately add or update the group's single plain `**Ticket:** <url-or-path>` backlink. If this write fails after creation, stop and report the created identity; do not create more tickets until the backlink is recorded.
-3. Apply the approved body, acceptance criteria, dependency, label, and lifecycle state.
+3. Apply the final body, acceptance criteria, dependency, label, and lifecycle state.
 4. For a complete group, omit `ready-for-agent`, remove it if present, and close the real-tracker issue or set the local file to `Status: resolved`.
 5. For a partial or not-started group, keep an existing active/claimed state when it is still accurate; otherwise make it open and use the configured status/label for the canonical `ready-for-agent` role.
 
-For a non-OpenSpec flow, publish the approved tickets normally:
+For a non-OpenSpec flow, publish the tickets normally:
 
 - **Local files** → write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first).
 - **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order so each ticket's blocking edges can reference real identifiers. Use native blocking / sub-issue relationships where available; otherwise write **Blocked by** references. Apply `ready-for-agent` unless instructed otherwise.

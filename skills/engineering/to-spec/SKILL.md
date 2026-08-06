@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user — just synthesize what you already know.
 
-The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not.
+Read `docs/agents/issue-tracker.md` if it exists. If it does not exist, do not require `/setup-matt-pocock-skills`; default to the local markdown tracker convention and publish the spec at `.scratch/<feature-slug>/spec.md`. Use `ready-for-agent` as the default triage/status string when `docs/agents/triage-labels.md` is also absent. Run `/setup-matt-pocock-skills` only when the user wants a real tracker, custom label vocabulary, or recorded domain-doc layout.
 
 ## Process
 

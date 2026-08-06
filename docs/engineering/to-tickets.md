@@ -2,7 +2,7 @@
 
 `to-tickets` takes a plan, a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), or the conversation you are in, and breaks it into a set of **[tickets](https://www.aihero.dev/ai-coding-dictionary/ticket)** on your issue tracker. Each ticket declares its **blocking edges** — the other tickets that have to finish before it can start.
 
-Every ticket is a **tracer bullet**: a narrow but complete path through every layer of the change — schema, API, UI, tests — that can be demoed on its own the moment it lands. The breakdown is previewed and approved before tracker writes begin.
+Every ticket is a **tracer bullet**: a narrow but complete path through every layer of the change — schema, API, UI, tests — that can be demoed on its own the moment it lands. The skill owns the breakdown and proceeds once the tickets are internally coherent; it stops only for missing or contradictory requirements, ambiguous configured tracker workflows, or OpenSpec checklist revisions that would change agreed scope or discard completed work.
 
 In an OpenSpec flow, `tasks.md` remains the archive record and owns the vertical-slice boundaries. Promotion adds one detailed tracker ticket per group when ticketing proceeds. The ticket mirrors completion state and adds executable detail, dependencies, lifecycle state, and tracker identity; it does not replace the checklist.
 
@@ -24,7 +24,7 @@ Tickets that `to-tickets` produced are agent-ready by construction. Don't run [t
 
 ## Prerequisites
 
-`to-tickets` publishes into a tracker, so [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) must have configured one for this repo, along with its status and dependency operations. Either kind works: a real tracker like GitHub or GitLab, or local markdown under `.scratch/`.
+`to-tickets` publishes into a tracker. If [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) has recorded one in `docs/agents/issue-tracker.md`, it uses that workflow. If no tracker config exists, it uses the local markdown fallback instead and writes one ticket per file under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, with `ready-for-agent` as the default open status. This lets public projects use the skill locally without committing personal tracker configuration.
 
 The exception is an all-complete OpenSpec change with no backlinks. That path performs no tracker reads or writes and points straight to archive.
 
@@ -34,7 +34,7 @@ A **horizontal** slice ships one layer of the change. Nothing works until every 
 
 One shape breaks the rule. A **wide refactor** is a single mechanical change whose blast radius fans across the codebase so no vertical slice can land green. `to-tickets` sequences that as expand–contract: add the new form, migrate callers in green batches, then remove the old form.
 
-Before publishing, the skill presents the numbered breakdown and asks you to confirm granularity and blocking edges. In an OpenSpec flow, the preview also shows each group's completion progress, proposed tracker action, completed and remaining items, satisfied dependencies, and any checklist/tracker conflict. Rejection causes no tracker, checklist, dependency, or backlink writes.
+Before publishing, the skill checks that each ticket has a demoable vertical-slice outcome and that each blocking edge genuinely gates the dependent ticket. In an OpenSpec flow, it also respects each group's completion progress, tracker action, completed and remaining items, satisfied dependencies, and any checklist/tracker conflict. It writes only when it can make a defensible decision from the spec, codebase, and tracker state.
 
 ## Completion-aware OpenSpec promotion
 
@@ -46,17 +46,17 @@ Before publishing, the skill presents the numbered breakdown and asks you to con
 | Partially complete | Open full-slice ticket; completed titles stay checked and concise, unchecked titles receive the executable detail |
 | Complete inside a mixed change | Minimal completed ticket; no work payload or `ready-for-agent`, backlinked and immediately closed/resolved |
 | Entire change complete, no backlinks | No tickets or backlinks; proceed to `archive-proposal` |
-| Entire change complete, existing backlinks | Reconcile the linked tickets in the preview; close any that remain open without creating duplicates |
+| Entire change complete, existing backlinks | Reconcile the linked tickets; close any that remain open without creating duplicates |
 
 Completed tickets remain historical nodes in the dependency graph. A dependent ticket may still name one under **Blocked by**, but the edge is already satisfied because the completed ticket is closed or `resolved`; it does not block the live frontier.
 
-`tasks.md` and the tracker have separate authority. The checklist owns OpenSpec completion, while the linked ticket owns tracker identity and collaboration state. A closed ticket never silently completes an unchecked task. Any disagreement is shown in the preview and resolved explicitly before writes begin.
+`tasks.md` and the tracker have separate authority. The checklist owns OpenSpec completion, while the linked ticket owns tracker identity and collaboration state. A closed ticket never silently completes an unchecked task. Any disagreement is resolved explicitly before writes begin.
 
 ## Common questions
 
 **It produced twelve tickets for a three-line change.**
 
-Over-decomposition is the most reported friction on this skill. The preview exists for exactly this — ask it to merge before approving. If the whole change fits one context window, skip this skill and go straight to [implement](https://aihero.dev/skills-implement).
+Over-decomposition is the most reported friction on this skill. The current rule is stricter: the skill should not make a ticket unless it can name what is demoable when that ticket is done. If the whole change fits one context window, skip this skill and go straight to [implement](https://aihero.dev/skills-implement).
 
 **What happens if I run it after implementation has started?**
 
@@ -64,11 +64,11 @@ The tickets still correspond to the original OpenSpec groups. A partially comple
 
 **What if every OpenSpec task is already complete?**
 
-If the change has never been promoted, there is no remaining collaboration work to ticket. The skill performs no tracker operation and points to `archive-proposal`. If backlinks already exist, it previews state reconciliation instead so open historical tickets are not left behind.
+If the change has never been promoted, there is no remaining collaboration work to ticket. The skill performs no tracker operation and points to `archive-proposal`. If backlinks already exist, it reconciles linked ticket state so open historical tickets are not left behind.
 
 **The tickets came out one per layer — all the schema in one, all the API in another.**
 
-Catch it in the preview by asking one question per ticket: what can I demo when this is done? A ticket with no answer is a horizontal slice. In OpenSpec mode, changing that boundary is also a deliberate change to the archive record and must be shown before approval.
+A ticket with no answer to "what can I demo when this is done?" is a horizontal slice and should be fixed by the skill before publishing. In OpenSpec mode, changing that boundary is also a deliberate change to the archive record, so the skill stops only when the revision would change agreed scope, discard completed work, or depends on missing/contradictory requirements.
 
 **The tickets are published. How do I run them?**
 
@@ -76,8 +76,8 @@ Work the frontier: any open ticket whose blockers are complete. Open one fresh a
 
 ## It's working if
 
-- Every proposed ticket has an answer to "what can I demo when this is done?" — and the answer is behavior, not a layer.
-- The numbered breakdown and blocking edges appear before any tracker write, and publication starts only after approval.
+- Every ticket has an answer to "what can I demo when this is done?" — and the answer is behavior, not a layer.
+- The skill publishes only after the breakdown and blocking edges are internally coherent; user input is reserved for missing/contradictory requirements, ambiguous configured tracker workflows, or risky OpenSpec checklist revisions.
 - OpenSpec groups retain a one-to-one ticket mapping whenever promotion proceeds.
 - A partial group shows completed titles as `[x]`, while only unchecked items carry new executable detail.
 - A completed group in a mixed change produces a minimal closed/resolved ticket with no `ready-for-agent` label.

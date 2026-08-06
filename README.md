@@ -37,7 +37,7 @@ This OpenSpec fork is distributed through **[skills.sh](https://skills.sh/yangpf
 npx skills@latest add yangpf5271/mattpocock-skills-openspec
 ```
 
-Pick the skills you want and which coding agents to install them on. **Make sure `setup-matt-pocock-skills` is one of them.** The installer can install this fork into Claude Code as well as Codex and other supported agents.
+Pick the skills you want and which coding agents to install them on. Include `setup-matt-pocock-skills` when you want repo-specific tracker, triage-label, domain-doc, or OpenSpec setup recorded. Without that setup, `/to-spec` and `/to-tickets` fall back to local markdown under `.scratch/`, so public projects do not need to commit personal tracker configuration.
 
 </details>
 
@@ -71,14 +71,16 @@ It writes the skills into your repo as ordinary files you own and can edit. Noth
 
 </details>
 
-### 2. Run `/setup-matt-pocock-skills`
+### 2. Optionally run `/setup-matt-pocock-skills`
 
-In your agent, run it once per repo. It will:
+Run it once per repo when you want shared repo-specific configuration. It will:
 
 - Ask you which issue tracker you want to use (GitHub, Linear, or local files)
 - Ask you what labels you apply to tickets when you triage them (`/triage` uses labels)
 - Ask you where you want to save any docs we create
 - When `/to-proposal` or `/archive-proposal` is installed, optionally initialize OpenSpec with its standard `spec-driven` schema. Existing team config is never overwritten, and Matt-specific rules stay in the skills.
+
+If you skip setup, `/to-spec` writes `.scratch/<feature-slug>/spec.md` and `/to-tickets` writes `.scratch/<feature-slug>/issues/<NN>-<slug>.md` by convention.
 
 ### 3. Bam - you're ready to go.
 
@@ -196,7 +198,7 @@ Skills I use daily for code work.
 - **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)** — Grilling session that also builds your project's domain model, sharpening terminology and updating `CONTEXT.md` and ADRs inline.
 - **[triage](./skills/engineering/triage/SKILL.md)** — Move issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.md)** — Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
-- **[setup-matt-pocock-skills](./skills/engineering/setup-matt-pocock-skills/SKILL.md)** — Configure this repo for the engineering skills (issue tracker, triage labels, domain doc layout, and optional standard OpenSpec instance). Run once per repo before using the other engineering skills.
+- **[setup-matt-pocock-skills](./skills/engineering/setup-matt-pocock-skills/SKILL.md)** — Configure this repo for the engineering skills (issue tracker, triage labels, domain doc layout, and optional standard OpenSpec instance). Use it when you want shared repo-specific configuration; otherwise `/to-spec` and `/to-tickets` use local `.scratch/` files by convention.
 - **[to-spec](./skills/engineering/to-spec/SKILL.md)** — Turn the current conversation into a spec and publish it to the issue tracker. No interview — just synthesizes what you've already discussed.
 - **[to-tickets](./skills/engineering/to-tickets/SKILL.md)** — Break any plan, spec, or conversation into a set of tracer-bullet tickets, each declaring its blocking edges — written as text in a local file, or as native blocking links on a real tracker.
 - **[to-proposal](./skills/engineering/to-proposal/SKILL.md)** — Sink the current conversation into an OpenSpec change (proposal, design, delta specs, tasks) that lives in the repo and evolves across changes — the in-repo counterpart to `/to-spec`.
