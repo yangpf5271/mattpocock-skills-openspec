@@ -118,3 +118,10 @@ grill-with-docs → to-spec → to-tickets → implement → code-review
 ```
 
 In the OpenSpec lifecycle, [to-proposal](https://aihero.dev/skills-to-proposal) supplies the `tasks.md` groups. This skill enriches them as tracker tickets when collaboration needs them; [implement](https://aihero.dev/skills-implement) works each open ticket and keeps the checklist accurate. Without ticketing, `implement` works `tasks.md` directly. Once every checkbox is complete, [archive-proposal](https://aihero.dev/skills-archive-proposal) closes the lifecycle. [ask-matt](https://aihero.dev/skills-ask-matt) routes the full set.
+
+`to-tickets` is complete as a *publishing* step under either entry. The skill has dedicated non-OpenSpec branches in its gather/draft/publish steps, and skips the OpenSpec verification step entirely when no change exists — so it can run straight from a conversation or spec with no `/to-proposal` before it. What differs is the close-out, not the publishing:
+
+- **With `/to-proposal`** — a change exists, so the loop is `/implement` → `/archive-proposal`. The OpenSpec checklist is the completion record and the tracker is the collaboration surface.
+- **Without `/to-proposal`** — there is no change to archive, so completion is tracked on the tracker: every ticket closed is the signal the work is done. `/archive-proposal` is not part of this path, because there is no OpenSpec lifecycle to close.
+
+Both paths publish the same agent-ready tracer-bullet tickets; only the lifecycle around them changes.
