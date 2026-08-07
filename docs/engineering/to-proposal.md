@@ -17,6 +17,8 @@ Use it after a change has been talked through when the spec should remain an evo
 
 The OpenSpec CLI and an initialized instance are prerequisites. [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) can install or initialize them and records the instance in `docs/agents/openspec-instance.md`.
 
+`tasks.md` groups are **tracer bullets** — thin, end-to-end slices that cross every layer (schema, API, UI, tests) and verify alone. They are written as vertical slices, not horizontal phases (Setup / Core / Tests); tests live inside the slice they grade, never behind it. Each group is sized to one `/implement` run. The skill applies standard slicing patterns — workflow steps, operations/CRUD, simple → complex, spike — when the conversation doesn't already dictate a boundary; see its `SKILL.md` for the operative checklist.
+
 ## Common questions
 
 **Does it replace `to-spec`?**

@@ -52,6 +52,21 @@ Completed tickets remain historical nodes in the dependency graph. A dependent t
 
 `tasks.md` and the tracker have separate authority. The checklist owns OpenSpec completion, while the linked ticket owns tracker identity and collaboration state. A closed ticket never silently completes an unchecked task. Any disagreement is resolved explicitly before writes begin.
 
+## Tasks vs tickets: what each one owns
+
+`tasks.md` and a tracker ticket are not two sizes of the same thing. They own different questions, and [implement](https://aihero.dev/skills-implement) reads them for different reasons.
+
+`tasks.md` is the **completion and archive record**. Its `- [ ]` / `- [x]` checkboxes are verifiable completion items; the OpenSpec CLI parses them to decide whether the change is done and archiveable. It carries no assignee, no status lane, no blocking edge, and no URL. Once archived, it lives permanently under `openspec/changes/archive/` as the auditable record of what this change delivered.
+
+A ticket is a **scheduling and collaboration unit**. It carries assignee, status, native blocking edges (the dependency DAG that decides what can be worked now), comments, and a tracker identity. It lives on the tracker, not in the repo, and a closed ticket stays in tracker history rather than becoming an in-repo artifact.
+
+That split maps directly onto what `/implement` needs from each:
+
+- **Scheduling** — which slice to work, whether it can start yet, who is on it — the ticket is the authority. Its blocking edges answer "can this run now?" in a way `tasks.md` cannot, because the checklist only *implies* order through writing convention ("blockers first"), not a real dependency graph.
+- **Completion** — whether a slice is actually done, and whether the whole change is done — `tasks.md` is the authority. A ticket's "closed" status is collaboration state, not verification; it says nobody is still working on it, not that the work passes its acceptance bar.
+
+This is why `/implement` runs in two modes. With promoted tickets it drives the ticket first (the scheduling surface) and then checks the matching `tasks.md` lines (the completion surface). Without tickets it works the checklist directly, because nothing needs scheduling — a solo session has no frontier to resolve. And it is why the guardrail above exists: the moment ticket state could rewrite the checklist, the archive record would stop matching what was actually built, and the two surfaces would lose their separate authority.
+
 ## Common questions
 
 **It produced twelve tickets for a three-line change.**
