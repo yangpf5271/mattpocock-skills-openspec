@@ -30,7 +30,7 @@ The exception is an all-complete OpenSpec change with no backlinks. That path pe
 
 ## Tracer bullets, not layers
 
-A **horizontal** slice ships one layer of the change. Nothing works until every layer has landed, and each ticket's acceptance criteria reach into work another ticket owns. A **vertical** slice — the tracer bullet — ships one thin path through all layers, so it is verifiable alone and owns everything it grades.
+A **horizontal** slice ships one layer of the change. Nothing works until every layer has landed, and each ticket's acceptance criteria reach into work another ticket owns. A **vertical** slice — the tracer bullet — ships one thin path through all layers, so it is verifiable alone and owns everything it grades. When the source doesn't already dictate a boundary, the skill draws one from standard patterns (workflow steps, operations/CRUD, simple → complex, spike) and checks each slice verifies alone, can be deferred, and reduces to one sentence of acceptance; see its `SKILL.md` for the operative checklist. This guidance applies whether the source is an OpenSpec `tasks.md`, a tracker spec, or just the conversation — `/to-tickets` works without `/to-proposal`.
 
 One shape breaks the rule. A **wide refactor** is a single mechanical change whose blast radius fans across the codebase so no vertical slice can land green. `to-tickets` sequences that as expand–contract: add the new form, migrate callers in green batches, then remove the old form.
 
