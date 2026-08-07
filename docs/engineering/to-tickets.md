@@ -74,6 +74,15 @@ A ticket with no answer to "what can I demo when this is done?" is a horizontal 
 
 Work the frontier: any open ticket whose blockers are complete. Open one fresh agent session per ticket. [implement](https://aihero.dev/skills-implement) drives tracker state first and then checks the matching `tasks.md` lines; completed tickets never enter that queue.
 
+**Where do the local tickets go? The v1.1 notes said a root-level `tickets.md`.**
+They did, and that was a bug — a single shared file also raced when parallel agents wrote to it. Local mode now writes one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, in dependency order, matching the layout the local tracker template already described. The `NN` prefix is a real ticket ID, so `/implement 03` works instead of retyping a long title.
+
+**It kept truncating when it tried to read my spec.**
+A very large spec can outgrow what a tracker issue serves back cleanly, and there is no local copy to fall back on — the agent then burns [tool calls](https://www.aihero.dev/ai-coding-dictionary/tool-call) re-fetching chunks and never reaches the end. Don't [clear](https://www.aihero.dev/ai-coding-dictionary/clearing) or [compact](https://www.aihero.dev/ai-coding-dictionary/compaction) between `/to-spec` and `/to-tickets`. Run them in the same context window and the spec never has to be fetched back at all.
+
+**The acceptance criteria graded nothing — some passed before any work was done.**
+The template asks for criteria and says nothing about whether they can fail, so this happens. Three shapes recur: a criterion already true at the base commit, a criterion that can only be satisfied by work another ticket owns, and one that restates the request rather than deriving from the artifact. Vertical slicing prevents most of it — a slice that delivers behaviour which didn't exist before is red at the base commit by construction — but the check is worth doing by hand. For each criterion, name the observation that would show it false, and confirm it fails at the commit the implementer starts from.
+
 ## It's working if
 
 - Every ticket has an answer to "what can I demo when this is done?" — and the answer is behavior, not a layer.
