@@ -1,6 +1,6 @@
 ---
 name: to-spec
-description: 生成 tracker spec：Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
+description: 准备发布规格到 tracker：Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
 disable-model-invocation: true
 ---
 

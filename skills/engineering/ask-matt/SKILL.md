@@ -1,6 +1,6 @@
 ---
 name: ask-matt
-description: 命令路由：Ask which skill or flow fits your situation. A router over the skills in this repo.
+description: 不知道用哪个技能时：Ask which skill or flow fits your situation. A router over the skills in this repo.
 disable-model-invocation: true
 ---
 

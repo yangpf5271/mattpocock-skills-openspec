@@ -1,6 +1,6 @@
 ---
 name: archive-proposal
-description: 归档 OpenSpec 变更：Finalize a completed OpenSpec change — check it's actually done, then delegate the merge-and-file to `openspec archive`. The step that turns a finished change into a permanent part of the spec's source of truth.
+description: 变更完成后归档：Finalize a completed OpenSpec change — check it's actually done, then delegate the merge-and-file to `openspec archive`. The step that turns a finished change into a permanent part of the spec's source of truth.
 disable-model-invocation: true
 ---
 
