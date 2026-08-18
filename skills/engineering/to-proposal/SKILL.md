@@ -14,7 +14,7 @@ Where `/to-spec` publishes a spec to the **issue tracker** (out of the repo), `/
   ```bash
   npm install -g @fission-ai/openspec
   ```
-- **OpenSpec instance initialized in this repo** — `openspec/changes/` and `openspec/specs/` must exist. If not, run `openspec init --tools none` (the `--tools none` keeps it from installing its own `.claude/` skills, which would clash with this repo's plugin layout). `openspec/config.yaml` must select the `spec-driven` schema; if it is missing after init, write only `schema: spec-driven`. Never add Matt-specific `context:` or `rules:` to this shared project config. If an existing config selects another schema, do not overwrite it — ask the user how to proceed. `/setup-matt-pocock-skills` records the instance root in `docs/agents/openspec-instance.md`; read it if it exists.
+- **OpenSpec instance initialized in this repo** — `openspec/changes/` and `openspec/specs/` must exist. If not, run `openspec init --tools none` (the `--tools none` keeps it from installing its own `.claude/` skills, which would clash with this repo's plugin layout). `openspec/config.yaml` must select the `spec-driven` schema — `init` creates it with exactly that schema (OpenSpec 1.9+); if it is still missing after init on an older version, write only `schema: spec-driven`. Never add Matt-specific `context:` or `rules:` to this shared project config. If an existing config selects another schema, do not overwrite it — ask the user how to proceed. `/setup-matt-pocock-skills` records the instance root in `docs/agents/openspec-instance.md`; read it if it exists.
 
 ## Process
 
@@ -30,7 +30,7 @@ If a change with that name already exists (`openspec/changes/<name>/` is present
 openspec new change "<name>"
 ```
 
-This creates `openspec/changes/<name>/` with `.openspec.yaml` and a `README.md`.
+This creates `openspec/changes/<name>/` with only a `.openspec.yaml` (schema + created date) — the artifact files are not pre-created.
 
 ### 3. Get the artifact build order
 
@@ -101,6 +101,7 @@ Tell the user:
 ## Guardrails
 
 - Create **all** artifacts required for implementation (the `applyRequires` set), not just proposal.md.
+- A change with no spec-level behavior change (pure refactor, tooling, docs) sets `skip_specs: true` in its `.openspec.yaml` instead of writing a delta — `openspec validate` rejects zero-delta changes without it. Never invent a requirement just to satisfy validation.
 - Always read dependency artifacts before writing one that depends on them.
 - `context` and `rules` from `openspec instructions` are constraints on what you write, never content for the file.
 - If the conversation is critically unclear on a point, use the **AskUserQuestion tool** to clarify — but prefer reasonable decisions to keep momentum.
