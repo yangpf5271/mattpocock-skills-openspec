@@ -1,14 +1,14 @@
 ---
 name: to-tickets
-description: 准备拆分实施任务时：Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker — edges as text in one file per ticket locally, or native blocking links on a real tracker.
+description: "准备拆分实施任务时：Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker)."
 disable-model-invocation: true
 ---
 
 # To Tickets
 
-Break a plan, spec, or conversation into a set of **tickets** — tracer-bullet vertical slices, each declaring the tickets that **block** it.
+Break a plan, spec, or conversation into a set of **tickets**: tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-Read `docs/agents/issue-tracker.md` if it exists. If it does not exist, do not require `/setup-matt-pocock-skills`; default to the local markdown tracker convention and publish tickets under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`. Use `ready-for-agent` as the default open status when `docs/agents/triage-labels.md` is also absent. Run `/setup-matt-pocock-skills` only when the user wants a real tracker, custom label vocabulary, or recorded domain-doc layout. The exception is an OpenSpec change whose tasks are already all complete and have never been promoted; that path performs no tracker operations.
+Read `docs/agents/issue-tracker.md` if it exists. If it does not exist, do not require `/setup-matt-pocock-skills`; default to the local markdown tracker convention and publish tickets under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`. Use `ready-for-agent` as the default open status when `docs/agents/triage-labels.md` is also absent. Tell the user to run `/setup-matt-pocock-skills` only when they want a real tracker, custom label vocabulary, or recorded domain-doc layout. The exception is an OpenSpec change whose tasks are already all complete and have never been promoted; that path performs no tracker operations.
 
 When this flow runs with OpenSpec (`/to-proposal` produced an OpenSpec change at `openspec/changes/<name>/`), `tasks.md` remains the OpenSpec implementation checklist and archive record. Its numbered groups own the vertical-slice boundaries and completion state. Once the change is promoted, each group maps to one tracker ticket; the ticket adds executable detail, blocking edges, status, assignment, comments, and tracker identity. OpenSpec is the archive; the tracker is the collaboration surface.
 
@@ -65,18 +65,20 @@ Only change OpenSpec group boundaries or checkbox items when the current checkli
 
 <vertical-slice-rules>
 
-- Each slice cuts a narrow but COMPLETE path through every layer (schema, API, UI, tests) — vertical, NOT a horizontal slice of one layer
+- Each slice cuts a narrow but COMPLETE path through every layer (schema, API, UI, tests): vertical, NOT a horizontal slice of one layer
 - A completed slice is demoable or verifiable on its own
 - Each slice is sized to fit in a single fresh context window
 - Any prefactoring should be done first
 
 When the source doesn't already dictate a slice boundary, draw one from these patterns (pick the first that fits): **Workflow steps** (build the simplest end-to-end path first, then middle steps and special cases) · **Operations/CRUD** (split "manage X" into Create/Read/Update/Delete) · **Simple → complex** (ship the minimal version, then edge cases as later slices) · **Spike, last resort** (time-box an investigation slice when a part is too uncertain to build). The rule underneath: find the core complexity and reduce the variations through it so one slice exercises a single path.
 
-Each slice should pass three checks before it becomes a ticket: (1) **it verifies alone** — the system's observable behaviour changes when it's done, and if it needs another slice first to be meaningful it's a horizontal layer, not a slice; (2) **it can be deferred** — a later slice still makes sense without it, and low-value work hidden inside a necessary slice means the cut is wrong; (3) **its acceptance reduces to one sentence** — if you can't state what's done in one line, the slice is too big, so split again.
+Each slice should pass three checks before it becomes a ticket: (1) **it verifies alone**, the system's observable behaviour changes when it's done, and if it needs another slice first to be meaningful it's a horizontal layer, not a slice; (2) **it can be deferred**, a later slice still makes sense without it, and low-value work hidden inside a necessary slice means the cut is wrong; (3) **its acceptance reduces to one sentence**, if you can't state what's done in one line, the slice is too big, so split again.
+
+Give each ticket its **blocking edges**: the other tickets that must complete before it can start. A ticket with no blockers can start immediately.
 
 </vertical-slice-rules>
 
-**Wide refactors are the exception to vertical slicing.** A **wide refactor** is one mechanical change — rename a column, retype a shared symbol — whose **blast radius** fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don't force it into a tracer bullet; sequence it as **expand–contract**. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can't stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket — green is promised only there.
+**Wide refactors are the exception to vertical slicing.** A **wide refactor** is one mechanical change (rename a column, retype a shared symbol) whose **blast radius** fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don't force it into a tracer bullet; sequence it as **expand–contract**. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can't stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket; green is promised only there.
 
 ### 4. Stop only when blocked
 
@@ -102,7 +104,7 @@ Process only OpenSpec groups whose action is not **Skip**, in dependency order, 
 4. For a complete group, omit `ready-for-agent`, remove it if present, and close the real-tracker issue or set the local file to `Status: resolved`.
 5. For a partial or not-started group, keep an existing active/claimed state when it is still accurate; otherwise make it open and use the configured status/label for the canonical `ready-for-agent` role.
 
-For a non-OpenSpec flow, publish the tickets normally:
+For a non-OpenSpec flow, publish the tickets normally. **How** depends on the tracker `/setup-matt-pocock-skills` configured; the tickets are the same either way, only the shape of the blocking edges changes:
 
 - **Local files** → write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first).
 - **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order so each ticket's blocking edges can reference real identifiers. Use native blocking / sub-issue relationships where available; otherwise write **Blocked by** references. Apply `ready-for-agent` unless instructed otherwise.
@@ -113,11 +115,11 @@ Do NOT close or modify any parent issue.
 
 <local-ticket-template>
 
-# <NN> — <Ticket title>
+# <NN>: <Ticket title>
 
-**What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective — not a layer-by-layer implementation list.
+**What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective, not a layer-by-layer implementation list.
 
-**Blocked by:** the numbers/titles of the tickets that gate this one, or "None — can start immediately".
+**Blocked by:** the numbers/titles of the tickets that gate this one, or "None (can start immediately)".
 
 **Status:** <configured label string for the canonical `ready-for-agent` role>
 
@@ -160,7 +162,7 @@ A reference to the parent issue on the tracker (if the source was an existing is
 
 ## What to build
 
-The end-to-end behaviour this ticket makes work, from the user's perspective — not layer-by-layer implementation.
+The end-to-end behaviour this ticket makes work, from the user's perspective, not layer-by-layer implementation.
 
 ## Acceptance criteria
 
@@ -169,13 +171,13 @@ The end-to-end behaviour this ticket makes work, from the user's perspective —
 
 ## Blocked by
 
-- A reference to each blocking ticket, or "None — can start immediately".
+- A reference to each blocking ticket, or "None (can start immediately)".
 
 </issue-template>
 
 For an OpenSpec ticket, mirror the local template's completion-aware criteria in the real issue body. A completed OpenSpec issue may omit **What to build** and **Acceptance criteria**, but retains dependency metadata before it is closed.
 
-In any ticket, avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
+In any ticket, avoid specific file paths or code snippets: they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.
 
 ### 6. Verify backlinks and OpenSpec state
 

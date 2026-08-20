@@ -6,7 +6,7 @@ Issues and specs for this repo live as markdown files in `.scratch/`.
 
 - One feature per directory: `.scratch/<feature-slug>/`
 - The spec is `.scratch/<feature-slug>/spec.md`
-- Implementation issues are one file per ticket at `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` — never a single combined tickets file
+- Implementation issues are one file per ticket at `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01`, never a single combined tickets file
 - Triage state is recorded as a `Status:` line near the top of each issue file (see `triage-labels.md` for the role strings)
 - Implementation tickets use the configured label string for the canonical `ready-for-agent` role as their open `Status:` value, and `Status: resolved` when complete. Reconciliation can move a mistakenly resolved ticket back to the configured open status; a resolved ticket is a satisfied blocker and does not enter the live frontier.
 - Comments and conversation history append to the bottom of the file under a `## Comments` heading
@@ -23,7 +23,7 @@ Read the file at the referenced path. The user will normally pass the path or th
 
 Used by `/wayfinder`. The **map** is a file with one **child** file per ticket.
 
-- **Map**: `.scratch/<effort>/map.md` — the Notes / Decisions-so-far / Fog body.
+- **Map**: `.scratch/<effort>/map.md` (the Notes / Decisions-so-far / Fog body).
 - **Child ticket**: `.scratch/<effort>/issues/NN-<slug>.md`, numbered from `01`, with the question in the body. A `Type:` line records the ticket type (`research`/`prototype`/`grilling`/`task`); a `Status:` line records `claimed`/`resolved`.
 - **Blocking**: a `Blocked by: NN, NN` line near the top. A ticket is unblocked when every file it lists is `resolved`.
 - **Frontier**: scan `.scratch/<effort>/issues/` for files that are open, unblocked, and unclaimed; first by number wins.

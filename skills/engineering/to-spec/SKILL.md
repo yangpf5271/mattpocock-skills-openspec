@@ -1,12 +1,12 @@
 ---
 name: to-spec
-description: 准备发布规格到 tracker：Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
+description: "准备发布规格到 tracker：Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed."
 disable-model-invocation: true
 ---
 
-This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user — just synthesize what you already know.
+This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user; just synthesize what you already know.
 
-Read `docs/agents/issue-tracker.md` if it exists. If it does not exist, do not require `/setup-matt-pocock-skills`; default to the local markdown tracker convention and publish the spec at `.scratch/<feature-slug>/spec.md`. Use `ready-for-agent` as the default triage/status string when `docs/agents/triage-labels.md` is also absent. Run `/setup-matt-pocock-skills` only when the user wants a real tracker, custom label vocabulary, or recorded domain-doc layout.
+Read `docs/agents/issue-tracker.md` if it exists. If it does not exist, do not require `/setup-matt-pocock-skills`; default to the local markdown tracker convention and publish the spec at `.scratch/<feature-slug>/spec.md`. Use `ready-for-agent` as the default triage/status string when `docs/agents/triage-labels.md` is also absent. Tell the user to run `/setup-matt-pocock-skills` only when they want a real tracker, custom label vocabulary, or recorded domain-doc layout.
 
 ## Process
 
@@ -54,7 +54,7 @@ A list of implementation decisions that were made. This can include:
 
 Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.
 
-Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it within the relevant decision and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
+Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it within the relevant decision and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.
 
 ## Testing Decisions
 

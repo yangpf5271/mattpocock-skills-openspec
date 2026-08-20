@@ -4,4 +4,4 @@ description: 非代码方案要追问：A relentless interview to sharpen a plan
 disable-model-invocation: true
 ---
 
-Run a `/grilling` session.
+Call the Skill tool with "grilling".

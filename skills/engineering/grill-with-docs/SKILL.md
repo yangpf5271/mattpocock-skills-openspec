@@ -4,4 +4,4 @@ description: 代码方案追问并建文档：A relentless interview to sharpen 
 disable-model-invocation: true
 ---
 
-Run a `/grilling` session, using the `/domain-modeling` skill.
+Call the Skill tool twice, for "grilling" and "domain-modeling".
