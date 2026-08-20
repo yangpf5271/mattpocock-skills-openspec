@@ -68,10 +68,10 @@ A ticket is a **scheduling and collaboration unit**. It carries assignee, status
 
 That split maps directly onto what `/implement` needs from each:
 
-- **Scheduling** — which slice to work, whether it can start yet, who is on it — the ticket is the authority. Its blocking edges answer "can this run now?" in a way `tasks.md` cannot, because the checklist only *implies* order through writing convention ("blockers first"), not a real dependency graph.
-- **Completion** — whether a slice is actually done, and whether the whole change is done — `tasks.md` is the authority. A ticket's "closed" status is collaboration state, not verification; it says nobody is still working on it, not that the work passes its acceptance bar.
+- **Scheduling**: which slice to work, whether it can start yet, and who is on it. The ticket is the authority. Its blocking edges answer "can this run now?" in a way `tasks.md` cannot, because the checklist only *implies* order through writing convention ("blockers first"), not a real dependency graph.
+- **Completion**: whether a slice is actually done, and whether the whole change is done. `tasks.md` is the authority. A ticket's "closed" status is collaboration state, not verification; it says nobody is still working on it, not that the work passes its acceptance bar.
 
-This is why `/implement` runs in two modes. With promoted tickets it drives the ticket first (the scheduling surface) and then checks the matching `tasks.md` lines (the completion surface). Without tickets it works the checklist directly, because nothing needs scheduling — a solo session has no frontier to resolve. And it is why the guardrail above exists: the moment ticket state could rewrite the checklist, the archive record would stop matching what was actually built, and the two surfaces would lose their separate authority.
+This is why `/implement` runs in two modes. With promoted tickets it drives the ticket first (the scheduling surface) and then checks the matching `tasks.md` lines (the completion surface). Without tickets it works the checklist directly, because nothing needs scheduling; a solo session has no frontier to resolve. And it is why the guardrail above exists: the moment ticket state could rewrite the checklist, the archive record would stop matching what was actually built, and the two surfaces would lose their separate authority.
 
 ## Common questions
 

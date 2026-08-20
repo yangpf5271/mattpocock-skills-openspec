@@ -14,7 +14,7 @@ set -euo pipefail
 #
 # On Linux/macOS each entry is a real symlink (`ln -sfn`).
 # On Windows (Git Bash / MSYS / Cygwin) a symlink to a directory is not
-# reliably creatable from bash — `ln -s` produces a directory *copy*, and
+# reliably creatable from bash: `ln -s` produces a directory *copy*, and
 # `ln -sfn` over an existing directory link aborts under `set -e`. So on
 # Windows each entry is a *junction* instead (created via PowerShell's
 # `New-Item -ItemType Junction`): directory-only, needs no admin rights, and

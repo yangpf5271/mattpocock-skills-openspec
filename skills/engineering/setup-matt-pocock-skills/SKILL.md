@@ -61,22 +61,22 @@ The defaults are the five canonical roles, each label string equal to its name: 
 
 Offer **multi-context** (a root `CONTEXT-MAP.md` pointing to per-context `CONTEXT.md` files) only when exploration found monorepo signals. Then confirm which layout they want.
 
-**Section D — OpenSpec.** This section only runs when `/to-proposal` (or `/archive-proposal`) is among the installed skills — it has nothing to configure otherwise. Skip it entirely if neither is installed.
+**Section D: OpenSpec.** This section only runs when `/to-proposal` (or `/archive-proposal`) is among the installed skills. It has nothing to configure otherwise. Skip it entirely if neither is installed.
 
 > Explainer: OpenSpec is an optional **in-repo source of truth** for change proposals and evolving specs. `/to-spec` publishes to the issue tracker; `/to-proposal` instead sinks the same thinking into `openspec/changes/<name>/`, and `/archive-proposal` later merges each finished change's delta into `openspec/specs/`. This section just records where that instance lives and makes sure it's usable.
 
-Three checks, in order. For the install/init steps, **confirm with the user via the AskUserQuestion tool, then run the command yourself** — the user should never have to remember the `--tools none` flag (it's load-bearing: without it, OpenSpec installs its own `.claude/` skills and clashes with this repo's plugin layout). These skills target OpenSpec 1.2.0+ command behaviour, so install the latest stable — no version pin.
+Three checks, in order. For the install/init steps, **confirm with the user via the AskUserQuestion tool, then run the command yourself**. The user should never have to remember the `--tools none` flag; without it, OpenSpec installs its own `.claude/` skills and clashes with this repo's plugin layout. These skills target the current OpenSpec CLI behaviour verified on 1.9+: install the latest stable, with no version pin.
 
 1. **CLI present?** Run `openspec --version`. If missing, ask the user to confirm installing it, then run:
    ```bash
    npm install -g @fission-ai/openspec
    ```
    Re-check `openspec --version` after installing.
-2. **Instance initialized?** Look for `openspec/config.yaml` **and** the `openspec/changes/` + `openspec/specs/` directories (empty dirs are not tracked by git, so a fresh clone can have the config but no `changes/` or `specs/`; `/to-proposal` would then fail at its first step). If either directory is absent, ask the user to confirm initializing at the repo root, then run — **always with `--tools none`**:
+2. **Instance initialized?** Look for `openspec/config.yaml` **and** the `openspec/changes/` + `openspec/specs/` directories (empty dirs are not tracked by git, so a fresh clone can have the config but no `changes/` or `specs/`; `/to-proposal` would then fail at its first step). If either directory is absent, ask the user to confirm initializing at the repo root, then run, always with `--tools none`:
    ```bash
    openspec init --tools none
    ```
-   Re-check the directories after init. If `openspec/config.yaml` already exists, leave it untouched — it is shared project configuration and may contain team-owned context or rules. In non-interactive mode `openspec init` preserves an existing config but does not create a missing one.
+   Re-check the directories after init. If `openspec/config.yaml` already exists, leave it untouched: it is shared project configuration and may contain team-owned context or rules. `openspec init --tools none` creates the standard `config.yaml` on OpenSpec 1.9+; the next step is a fallback for older CLI behaviour or unusual init failures.
 3. **Standard config present?** If `openspec/config.yaml` is still missing after init, write the minimal standard config:
    ```yaml
    schema: spec-driven

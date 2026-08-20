@@ -24,9 +24,9 @@ Inventory every plain `**Ticket:** <url-or-path>` line. Zero backlinks under a g
 
 Classify each group from `tasks.md`:
 
-- **Not started** — every item is `- [ ]`.
-- **Partially complete** — the group contains both `- [x]` and `- [ ]`.
-- **Complete** — every item is `- [x]`.
+- **Not started**: every item is `- [ ]`.
+- **Partially complete**: the group contains both `- [x]` and `- [ ]`.
+- **Complete**: every item is `- [x]`.
 
 `tasks.md` checkbox state is authoritative for OpenSpec completion and archive preflight. Tracker state is authoritative for collaboration state, but it must never silently turn an unchecked OpenSpec item into a completed one.
 
@@ -130,7 +130,7 @@ Do NOT close or modify any parent issue.
 
 <partial-openspec-ticket-template>
 
-# <NN> — <OpenSpec group title>
+# <NN>: <OpenSpec group title>
 
 **What to build:** the complete end-to-end slice represented by this group, with implementation detail focused on the remaining work.
 
@@ -146,7 +146,7 @@ Do NOT close or modify any parent issue.
 
 <completed-openspec-ticket-template>
 
-# <NN> — <OpenSpec group title>
+# <NN>: <OpenSpec group title>
 
 **Blocked by:** the tickets this slice depended on, or "None".
 

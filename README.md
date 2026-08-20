@@ -12,7 +12,7 @@
 
 [![skills.sh](https://skills.sh/b/yangpf5271/mattpocock-skills-openspec)](https://skills.sh/yangpf5271/mattpocock-skills-openspec)
 
-This repository is an OpenSpec-enabled fork of Matt Pocock's agent skills for real engineering — not vibe coding.
+This repository is an OpenSpec-enabled fork of Matt Pocock's agent skills for real engineering: not vibe coding.
 
 Developing real applications is hard. Approaches like GSD, BMAD, and Spec-Kit try to help by owning the process. But while doing so, they take away your control and make bugs in the process hard to resolve.
 
