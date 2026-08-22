@@ -1,0 +1,3 @@
+interface:
+  display_name: "Codebase Atlas"
+  short_description: "Build and refresh a persistent codebase knowledge map"

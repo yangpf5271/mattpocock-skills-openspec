@@ -37,6 +37,7 @@
     "./skills/engineering/domain-modeling",
     "./skills/engineering/codebase-design",
     "./skills/engineering/code-review",
+    "./skills/engineering/codebase-atlas",
     "./skills/engineering/resolving-merge-conflicts",
     "./skills/engineering/wizard",
     "./skills/productivity/grill-me",
