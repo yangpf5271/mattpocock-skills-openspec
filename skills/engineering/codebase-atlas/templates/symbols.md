@@ -1,6 +1,7 @@
 # Symbols
 
-One card per mapped symbol, grouped by module. Once this file passes roughly 300 lines or 5 modules, split it into `symbols/<module>.md` and record the split in `INDEX.md`.
+One card per mapped symbol, grouped by module.
+<!-- Writer guidance, do not copy into the atlas: once this file passes roughly 300 lines or 5 modules, split it into `symbols/<module>.md` and record the split in `INDEX.md`. -->
 
 ## <!-- module name -->
 
@@ -15,4 +16,5 @@ One card per mapped symbol, grouped by module. Once this file passes roughly 300
 
 Completed at commit `<sha>`.
 
-Every fact line carries an evidence grade: `[verified]` with the file:line read this run, `[inferred]`, or `[assumed]`. Unknowns get their own line; never omit them silently.
+Every fact line carries an evidence grade: `[verified]` with the file:line read that run, `[inferred]`, or `[assumed]`; unknowns get their own line.
+<!-- Writer guidance, do not copy into the atlas: never omit an unknown silently; never invent a file:line. -->

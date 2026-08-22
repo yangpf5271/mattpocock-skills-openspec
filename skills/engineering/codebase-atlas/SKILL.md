@@ -101,7 +101,10 @@ Before writing the completion report:
 
 1. Every `[verified]` edge cites a file:line actually read during this run.
 2. Spot-check 3 new edges: re-read their cited lines. Any mismatch, or any cited line you cannot account for having read, fails the gate.
-3. On failure, fix the entries and re-run the check. Never lower a grade to pass the gate.
+3. The completion report's counts match the files as written: count the cards, flows, and impact rows you actually wrote (grep the headings), never from memory.
+4. On failure, fix the entries and re-run the check. Never lower a grade to pass the gate.
+
+The bundled [validate.sh](./validate.sh) checks the structural half mechanically: `bash <this-skill-folder>/validate.sh <atlas-dir> <project-root>`. It fails on breakage (missing files, altered table headers, malformed evidence grades, step numbering, receipt fields), warns on template leakage, and prints the authoritative card/flow/row counts; take item 3's numbers from its output. Where bash is unavailable, run the checks by hand.
 
 ## AGENTS.md registration
 
@@ -109,7 +112,7 @@ Register the atlas in the target project's AGENTS.md from the block template: id
 
 ## Templates
 
-Write every atlas file from these templates; keep the table headers verbatim so the atlas stays mechanically parseable.
+Write every atlas file from these templates; keep the table headers verbatim so the atlas stays mechanically parseable. Templates mix two kinds of text: reader-facing notation keys and table headers, which you keep; and writer guidance in `<!-- -->` comments and placeholder rows, which you never copy into the atlas.
 
 - [templates/INDEX.md](./templates/INDEX.md): front door, freshness table, symbol-file map
 - [templates/overview.md](./templates/overview.md): stack, entry points, feature clusters, external boundaries

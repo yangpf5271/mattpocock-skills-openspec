@@ -4,7 +4,7 @@
 
 The atlas holds six files: `INDEX.md` (front door, region freshness table, symbol-file map), `overview.md` (stack, entry points, feature clusters, external boundaries), `processes.md` (named execution flows, step by step), `symbols.md` (one card per mapped symbol, with evidence grades), `impact.md` (direct dependencies, risk levels, update order), and `completion-report.md` (receipt of the latest run, latest only). An idempotent block in the target project's AGENTS.md tells every agent the atlas exists and when to consult it.
 
-Everything is written from templates in the skill folder, so the format stays mechanically parseable no matter which agent (or person) ran the last completion.
+Everything is written from templates in the skill folder, so the format stays mechanically parseable no matter which agent (or person) ran the last completion. A bundled `validate.sh` checks that structure mechanically: it fails on breakage, warns on template leakage, and prints the authoritative card/flow/impact-row counts for the completion report.
 
 ## When to reach for it
 
@@ -49,6 +49,7 @@ No. Registration goes into AGENTS.md only, between idempotent `ATLAS:START`/`ATL
 - `completion-report.md` says what was completed, the final radius, why it stopped, and what is still blind.
 - Regions you changed last month show as stale; regions nobody touched still show their original stamps.
 - The AGENTS.md block is present exactly once, and reading it is enough for a fresh agent to use the atlas correctly.
+- `bash validate.sh docs/atlas .` (bundled with the skill) passes, and the receipt's counts match the counts it prints.
 
 ## Where it fits
 
