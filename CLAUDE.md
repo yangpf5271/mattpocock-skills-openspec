@@ -10,6 +10,8 @@ Every skill in `engineering/` or `productivity/` (the **promoted** buckets) must
 
 Install commands are copied verbatim from [.agents/install-block.md](./.agents/install-block.md). `.claude-plugin/marketplace.json` makes the repo its own single-plugin marketplace, but this fork's documented route is skills.sh so Claude Code and Codex receive the same OpenSpec-enabled files. When bumping the release version, keep `.claude-plugin/plugin.json`'s `version` in sync with `package.json`'s: Claude uses the plugin `version` to decide when installed users see an update. Run `claude plugin validate . --strict` after touching either manifest. Why a Claude plugin but not (yet) a Codex one lives in [.agents/adr/0002-ship-as-a-claude-code-plugin.md](./.agents/adr/0002-ship-as-a-claude-code-plugin.md).
 
+When merging upstream (`mattpocock/skills`), check [docs/upstream-watch.md](./docs/upstream-watch.md) for deferred adaptation items whose trigger may have landed.
+
 Each skill entry in the top-level `README.md` must link the skill name to its `SKILL.md`.
 
 Each bucket folder has a `README.md` that lists every skill in the bucket with a one-line description, with the skill name linked to its `SKILL.md`. The promoted buckets' `README.md`s and the top-level `README.md` group entries into **User-invoked** and **Model-invoked**; non-promoted bucket `README.md`s (`misc/`, `in-progress/`) use a flat list.
