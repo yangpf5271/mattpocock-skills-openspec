@@ -10,6 +10,8 @@ Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
 
 Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings.
 
+Also flag documentation drift (fold it into the Standards axis): references in documents to renamed or removed things, and promises of behavior the code does not keep.
+
 The issue tracker should have been provided to you. If `docs/agents/issue-tracker.md` is missing, tell the user to run `/setup-matt-pocock-skills`.
 
 If the repo keeps a codebase atlas (`docs/atlas/`; see `/codebase-atlas`), give both sub-agents the `impact.md` and `symbols.md` entries for the changed symbols, so callers and risks the diff does not show still get reviewed.

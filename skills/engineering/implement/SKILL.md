@@ -10,6 +10,8 @@ If the repo keeps a codebase atlas (`docs/atlas/`; see `/codebase-atlas`) coveri
 
 Use /tdd where possible, at pre-agreed seams.
 
+Keep the documents truthful in the same change. When the work renames or removes a term, command, or field that any document references, update every reference now and leave a mechanical guard (a test or a grep assertion) so the old name cannot silently return; when a document promises behavior, the test proving it lands in the same change.
+
 Run typechecking regularly, single test files regularly, and the full test suite once at the end.
 
 Once done, use /code-review to review the work.
