@@ -16,6 +16,8 @@ Run typechecking regularly, single test files regularly, and the full test suite
 
 Once done, use /code-review to review the work.
 
+After the review passes, run acceptance before calling the work done. Run the full test suite. If the change touches a UI surface and the repo has browser E2E infrastructure, run the E2E journeys covering this change's spec scenarios. If the repo has no test infrastructure at all, do not skip silently: report that the spec scenarios have no executable verification and ask whether to scaffold minimal infrastructure now (a single test runner for logic-only changes; a minimal Playwright skeleton for UI changes) or skip with the gap recorded in the change.
+
 Commit your work to the current branch.
 
 ## Tracking progress
