@@ -16,14 +16,15 @@ Run typechecking regularly, single test files regularly, and the full test suite
 
 Once done, use /code-review to review the work.
 
-After the review passes, run acceptance before calling the work done. Run the full test suite. If the change touches a UI surface, its spec-scenario journeys need verifying, two ways; pick with the user when it is not obvious:
+After the review passes, run acceptance before calling the work done. Run the full test suite. If the change touches a UI surface, its spec-scenario journeys need verifying; three ways, take the first that fits unless the user says otherwise:
 
-- **Automated**: when the repo has browser E2E infrastructure, run the E2E journeys covering this change's spec scenarios.
-- **Manual acceptance route**: output the journeys as a walkthrough for the user to click through: one numbered route per scenario, each step naming the page, the action, and the expected observable result. The user reports pass or fail per scenario; a failure comes back here as a bug report before the work counts as done.
+- **Committed E2E**: when the repo has browser E2E infrastructure, run the E2E journeys covering this change's spec scenarios. Preferred where it exists: the specs are committed and re-run as regression on every later change.
+- **Agent browser walkthrough**: when the harness provides browser automation tools, walk the route yourself: start the dev server (or ask the user to), then one browser route per scenario, screenshotting each step and judging what the screenshot shows against the scenario's expected observable result. Present the screenshots and per-scenario verdicts to the user; a scenario whose expectation is look and feel waits for explicit user confirmation on the screenshot. No test files are committed, so this verifies this change only.
+- **Manual acceptance route**: output the journeys as a walkthrough for the user to click through: one numbered route per scenario, each step naming the page, the action, and the expected observable result. The user reports pass or fail per scenario.
 
-Prefer the automated run when the infrastructure exists; take the manual route when it does not, when a scenario needs human judgment of look and feel, or when the user asks.
+A failure in any mode comes back here as a bug report before the work counts as done. When the harness has no browser tools and the repo has no infrastructure, the manual route is the default.
 
-If the repo has no test infrastructure at all, do not skip silently: report that the spec scenarios have no executable verification and ask whether to scaffold minimal infrastructure now (a single test runner for logic-only changes; a minimal Playwright skeleton for UI changes), verify the UI scenarios by manual acceptance route, or skip with the gap recorded in the change.
+If the repo has no test infrastructure at all, do not skip silently: report that the spec scenarios have no executable verification and ask whether to scaffold minimal infrastructure now (a single test runner for logic-only changes; a minimal Playwright skeleton for UI changes), verify the UI scenarios by agent browser walkthrough, verify them by manual acceptance route, or skip with the gap recorded in the change.
 
 Commit your work to the current branch.
 
