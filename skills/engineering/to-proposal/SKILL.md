@@ -74,14 +74,6 @@ b. **Bridge the conversation's content into the artifact**: map what `/to-spec` 
 
    For `proposal.md` specifically: keep the Problem Statement in user-facing terms, with no file paths or implementation code. Reference the `/grilling` or `/to-spec` thread it synthesizes when one exists.
 
-   For `design.md` specifically: it is a design artifact, not a minutes record. Before writing it, walk this coverage checklist and resolve every item it triggers:
-
-   - The change exposes or alters an **API surface** → list the endpoint contracts: path, method, request and response shapes, error semantics.
-   - It touches **data** → list the schema changes and the entity relations they imply.
-   - It touches a **UI** → list the pages or views, their key states, and the data each consumes.
-
-   Any item the conversation left undecided gets resolved now, with the AskUserQuestion tool, or by pointing the user at `/prototype` when the question needs a runnable answer; the outcome lands in the Decisions section with its rationale. A decision neither the conversation nor the checklist covered is a seam `/tdd` cannot pre-agree on, and `/implement` will improvise it.
-
    For `tasks.md` specifically: write the checklist as **vertical slices** (each `## N.` group = one narrow but complete path through every layer, demoable or verifiable on its own, blockers first), not as horizontal phases (Setup / Core / Tests). If the flow skips `/to-tickets`, `/implement` can work this checklist directly. If the flow runs `/to-tickets`, those groups become the starting boundaries for tracker tickets; `/to-tickets` adds ticket-specific fields like Blocked by, status, and tracker identity.
 
    When the conversation doesn't already dictate a slice boundary, draw one from these patterns (pick the first that fits): **Workflow steps** (build the simplest end-to-end path first, then middle steps and special cases) · **Operations/CRUD** (split "manage X" into Create/Read/Update/Delete) · **Simple → complex** (ship the minimal version, then edge cases as later slices) · **Spike, last resort** (time-box an investigation slice when a part is too uncertain to build). The rule underneath: find the core complexity and reduce the variations through it so one slice exercises a single path.
