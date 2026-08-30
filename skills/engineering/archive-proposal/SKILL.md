@@ -33,7 +33,7 @@ Read `openspec/changes/<name>/tasks.md` (if it exists). Count `- [ ]` (incomplet
 
 ### 4. Report verification coverage
 
-Check whether the change's spec scenarios have automated coverage: does the repo have a test runner, and do tests exist that exercise the scenarios in the delta specs (unit, integration, or E2E)? Report the coverage state in the confirmation summary, as three numbers: scenarios total, covered, uncovered. Do not block on uncovered scenarios; the archive may proceed with the user informed, and uncovered scenarios stay visible in the archived record.
+Check whether the change's spec scenarios have automated coverage: does the repo have a test runner, and do tests exist that exercise the scenarios in the delta specs (unit, integration, or E2E)? Report the coverage state in the confirmation summary, as three numbers: scenarios total, covered, uncovered. Scenarios the user confirmed through a manual acceptance route count as covered, noted as verified by hand. Do not block on uncovered scenarios; the archive may proceed with the user informed, and uncovered scenarios stay visible in the archived record.
 
 ### 5. Delegate to the CLI
 
