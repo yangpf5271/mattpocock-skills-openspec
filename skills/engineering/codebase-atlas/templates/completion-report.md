@@ -6,6 +6,7 @@ Receipt of the latest atlas completion run. Only the latest report is kept; the 
 - Entry: <!-- full generation / incremental update / targeted completion -->
 - Seeds: <!-- symbols or regions this run started from -->
 - Completed: <!-- what got mapped: N new cards, M flows touched, K impact rows -->
+- Visuals: <!-- N Mermaid sources previewed successfully and N paired PNG files exported -->
 
 ## Why it stopped
 

@@ -2,8 +2,9 @@
 # Structural validator for a codebase atlas.
 # Usage: bash validate.sh <atlas-dir> [project-root]
 # Checks structure and prints the authoritative counts for the completion
-# report. Reading sources and grading evidence stay with the agent; this
-# script only catches what is mechanically checkable.
+# report, including previewed visual artifact pairs. Reading sources and
+# grading evidence stay with the agent; this script only catches what is
+# mechanically checkable.
 # Exit codes: 0 pass (warnings allowed), 1 structural failure, 2 usage error.
 
 set -u
@@ -25,10 +26,12 @@ warns=0
 err() { echo "FAIL: $*"; fail=1; }
 warn() { echo "WARN: $*"; warns=$((warns + 1)); }
 
-# 1. Required files
-for f in INDEX.md overview.md processes.md impact.md completion-report.md; do
+# 1. Required files and visual directories
+for f in INDEX.md overview.md processes.md impact.md completion-report.md visuals.md; do
   [ -f "$ATLAS/$f" ] || err "missing required file: $f"
 done
+[ -d "$ATLAS/visuals" ] || err "missing required directory: visuals/"
+[ -d "$ATLAS/images" ] || err "missing required directory: images/"
 
 # 2. Symbol cards: symbols.md, or symbols/ split per module
 cards=0
@@ -126,14 +129,47 @@ $unknown"
 # 7. Receipt fields and sections
 rep="$ATLAS/completion-report.md"
 if [ -f "$rep" ]; then
-  for field in 'Run at:' 'Entry:' 'Seeds:' 'Completed:'; do
+  for field in 'Run at:' 'Entry:' 'Seeds:' 'Completed:' 'Visuals:'; do
     grep -q "^- $field" "$rep" || err "receipt: field '$field' missing"
   done
   grep -q '^## Why it stopped' "$rep" || err "receipt: section '## Why it stopped' missing"
   grep -q '^## Remaining blind spots' "$rep" || err "receipt: section '## Remaining blind spots' missing"
 fi
 
-# 8. Template boilerplate leaks (warnings: rendered output stays readable)
+# 8. Visual manifest and preview-export pairs
+visuals=0
+manifest="$ATLAS/visuals.md"
+if [ -f "$manifest" ]; then
+  grep -q '^| Visual | Covers | Source | Export | Last previewed at |' "$manifest" \
+    || err "visuals: table header missing or altered"
+fi
+if [ -d "$ATLAS/visuals" ] && [ -d "$ATLAS/images" ]; then
+  for source in "$ATLAS"/visuals/*.mmd; do
+    [ -f "$source" ] || continue
+    visuals=$((visuals + 1))
+    name="$(basename "$source" .mmd)"
+    printf '%s' "$name" | grep -qE '^[a-z0-9]+(-[a-z0-9]+)*$' \
+      || err "visuals: basename must be kebab-case: $name"
+    export="$ATLAS/images/$name.png"
+    [ -s "$export" ] || { err "visuals: missing or empty export for visuals/$name.mmd: images/$name.png"; continue; }
+    signature=$(od -An -tx1 -N8 "$export" 2>/dev/null | tr -d ' \n')
+    [ "$signature" = "89504e470d0a1a0a" ] || err "visuals: invalid PNG signature: images/$name.png"
+    if [ -f "$manifest" ]; then
+      source_refs=$(grep -Fc "visuals/$name.mmd" "$manifest")
+      export_refs=$(grep -Fc "images/$name.png" "$manifest")
+      [ "$source_refs" -eq 1 ] || err "visuals: expected exactly one manifest source reference for visuals/$name.mmd, found $source_refs"
+      [ "$export_refs" -eq 1 ] || err "visuals: expected exactly one manifest export reference for images/$name.png, found $export_refs"
+    fi
+  done
+  [ "$visuals" -gt 0 ] || err "visuals: at least one previewed Mermaid source and PNG export is required"
+  for export in "$ATLAS"/images/*.png; do
+    [ -f "$export" ] || continue
+    name="$(basename "$export" .png)"
+    [ -f "$ATLAS/visuals/$name.mmd" ] || err "visuals: PNG has no paired Mermaid source: images/$name.png"
+  done
+fi
+
+# 9. Template boilerplate leaks (warnings: rendered output stays readable)
 grep -rq 'Writer guidance, do not copy' "$ATLAS" 2>/dev/null \
   && warn "writer-guidance comments leaked into the atlas"
 grep -rq 'One card per mapped symbol' "$ATLAS" 2>/dev/null \
@@ -141,7 +177,7 @@ grep -rq 'One card per mapped symbol' "$ATLAS" 2>/dev/null \
 grep -rq 'The front door to this codebase' "$ATLAS" 2>/dev/null \
   && warn "INDEX template intro copied verbatim"
 
-# 9. AGENTS.md registration (warning: registration is repairable any time)
+# 10. AGENTS.md registration (warning: registration is repairable any time)
 if [ -f "$ROOT/AGENTS.md" ]; then
   s=$(grep -c 'ATLAS:START' "$ROOT/AGENTS.md" 2>/dev/null); s=${s:-0}
   e=$(grep -c 'ATLAS:END' "$ROOT/AGENTS.md" 2>/dev/null); e=${e:-0}
@@ -150,7 +186,7 @@ if [ -f "$ROOT/AGENTS.md" ]; then
   fi
 fi
 
-echo "counts: symbol_cards=$cards flows=$flows impact_rows=$rows"
+echo "counts: symbol_cards=$cards flows=$flows impact_rows=$rows visuals=$visuals"
 echo "counts above are authoritative; copy them into completion-report.md"
 
 if [ "$fail" = 1 ]; then

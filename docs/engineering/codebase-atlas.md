@@ -1,10 +1,10 @@
 ## What it does
 
-`codebase-atlas` builds and maintains a persistent knowledge layer for a codebase: plain Markdown maps under `docs/atlas/`, committed to the repo, readable by humans and any agent, refreshed region by region instead of regenerated whole.
+`codebase-atlas` builds and maintains a persistent knowledge layer for a codebase: structured Markdown maps plus reproducible Mermaid sources and preview-verified PNG exports under `docs/atlas/`, committed to the repo and refreshed region by region instead of regenerated whole.
 
-The atlas holds six files: `INDEX.md` (front door, region freshness table, symbol-file map), `overview.md` (stack, entry points, feature clusters, external boundaries), `processes.md` (named execution flows, step by step), `symbols.md` (one card per mapped symbol, with evidence grades), `impact.md` (direct dependencies, risk levels, update order), and `completion-report.md` (receipt of the latest run, latest only). An idempotent block in the target project's AGENTS.md tells every agent the atlas exists and when to consult it.
+The Markdown side holds `INDEX.md` (front door, region freshness table, symbol-file map), `overview.md` (stack, entry points, feature clusters, external boundaries), `processes.md` (named execution flows, step by step), `symbols.md` (one card per mapped symbol, with evidence grades), `impact.md` (direct dependencies, risk levels, update order), `visuals.md` (the diagram manifest), and `completion-report.md` (receipt of the latest run, latest only). Reproducible Mermaid sources live under `visuals/`; each successfully previewed source has a same-basename PNG under `images/`. An idempotent block in the target project's AGENTS.md tells every agent the atlas exists and when to consult it.
 
-Everything is written from templates in the skill folder, so the format stays mechanically parseable no matter which agent (or person) ran the last completion. A bundled `validate.sh` checks that structure mechanically: it fails on breakage, warns on template leakage, and prints the authoritative card/flow/impact-row counts for the completion report.
+Everything is written from templates in the skill folder, so the format stays mechanically parseable no matter which agent (or person) ran the last completion. Every completion must preview its affected diagrams and export each successful preview to the paired PNG. Preview success without export is a failed completion; a render failure leaves the last successful artifacts and completion report intact. A bundled `validate.sh` checks the structure, manifest/source/export pairing, and PNG signatures mechanically, warns on template leakage, and prints the authoritative card/flow/impact-row/visual counts for the completion report.
 
 ## When to reach for it
 
@@ -33,6 +33,14 @@ Every completion run obeys EXPAND/STOP rules. It expands a ring when the code to
 
 Every fact line carries an evidence grade: `[verified]` (the file:line was actually read this run, and must be cited), `[inferred]` (strong signal, line unread), or `[assumed]` (a marked guess). A quality gate spot-checks three new edges per run by re-reading them; a cited line nobody read fails the gate.
 
+**What happens if diagram preview or export fails?**
+
+The atlas run is not complete. The agent reports the renderer or export blocker, keeps the previous successful source, PNG, manifest row, and completion report intact, and does not silently skip the visual gate. Once a preview succeeds, exporting the paired PNG is mandatory.
+
+**What happens to an atlas created before visual exports were required?**
+
+Its next writing completion migrates it: create `visuals.md`, `visuals/`, and `images/`, then preview and export at least one diagram for the affected scope before replacing `completion-report.md`. Until that migration succeeds, the stricter validator reports the missing visual artifacts instead of treating the old atlas as current. Lookup remains read-only and does not migrate files.
+
 **What if the repo is not on git?**
 
 Freshness normally comes from `git log <stamp>..HEAD -- <region-path>` (non-empty means stale). Without git, the atlas falls back to comparing file modification dates against its date stamps.
@@ -46,10 +54,11 @@ No. Registration goes into AGENTS.md only, between idempotent `ATLAS:START`/`ATL
 - `docs/atlas/INDEX.md` answers "where is the map for X and is it fresh" without opening anything else.
 - Every `[verified]` edge cites a file:line; spot-checked edges re-read correctly.
 - A targeted completion touches only the one or two symbol files it needs, not the whole atlas.
-- `completion-report.md` says what was completed, the final radius, why it stopped, and what is still blind.
+- `completion-report.md` says what was completed, how many visuals were previewed and exported, the final radius, why it stopped, and what is still blind.
+- Every `visuals/<name>.mmd` has a manifest row and a valid same-basename `images/<name>.png`; there is at least one visual artifact pair.
 - Regions you changed last month show as stale; regions nobody touched still show their original stamps.
 - The AGENTS.md block is present exactly once, and reading it is enough for a fresh agent to use the atlas correctly.
-- `bash validate.sh docs/atlas .` (bundled with the skill) passes, and the receipt's counts match the counts it prints.
+- `bash validate.sh docs/atlas .` (bundled with the skill) passes, and the receipt's card, flow, impact-row, and visual counts match the counts it prints.
 
 ## Where it fits
 

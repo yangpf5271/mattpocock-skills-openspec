@@ -25,3 +25,6 @@ Present only once `symbols.md` has been split; until then all cards live in `sym
 - `symbols.md` (or `symbols/<module>.md`): symbol cards
 - `impact.md`: dependency rings, risk levels, update order
 - `completion-report.md`: receipt of the latest completion run
+- `visuals.md`: preview-verified diagram manifest
+- `visuals/*.mmd`: reproducible Mermaid diagram sources
+- `images/*.png`: exported diagram previews

@@ -1,11 +1,11 @@
 ---
 name: codebase-atlas
-description: "改动不熟悉的代码区域、或图谱缺失/过期时：Build and maintain a persistent codebase atlas under docs/atlas/ as plain Markdown committed to the repo: symbol cards, named execution flows, impact rings with risk levels, and per-region freshness. One completion engine with three entries: full generation (asks the user first), incremental update from git diff, and targeted completion around whatever you are about to change."
+description: "改动不熟悉的代码区域、或图谱缺失/过期时：Build and maintain a persistent codebase atlas under docs/atlas/ as committed Markdown plus preview-verified Mermaid sources and PNG exports: symbol cards, named execution flows, impact rings with risk levels, and per-region freshness. One completion engine with three entries: full generation (asks the user first), incremental update from git diff, and targeted completion around whatever you are about to change."
 ---
 
 # Codebase Atlas
 
-A persistent knowledge layer for a codebase: plain Markdown, committed to the repo, readable by humans and any agent, maintained region by region instead of regenerated whole.
+A persistent knowledge layer for a codebase: plain Markdown plus reproducible diagram sources and preview-verified PNG exports, committed to the repo, readable by humans and any agent, maintained region by region instead of regenerated whole.
 
 Session-scoped exploration (grep, repomaps, one-off summaries) is discarded when the session ends. The atlas is not: it survives, it goes through code review, and it gets refreshed only where code actually changed.
 
@@ -27,6 +27,9 @@ The atlas lives in the target project at `docs/atlas/` by default (the user may 
 - `symbols.md`: one card per mapped symbol (split per module once large; see below).
 - `impact.md`: for each mapped symbol, its direct dependencies (d=1), a risk level, and an update order.
 - `completion-report.md`: receipt of the latest completion run. Only the latest is kept; history belongs to git.
+- `visuals.md`: manifest of rendered diagrams, the atlas scope each one covers, its source, its PNG export, and the commit at which it was last previewed successfully.
+- `visuals/*.mmd`: Mermaid sources for reproducible diagrams. Use stable kebab-case names tied to the mapped flow or region.
+- `images/*.png`: exported previews paired one-to-one with `visuals/*.mmd` by basename. These are committed atlas artifacts, not temporary screenshots.
 - An AGENTS.md registration block, so every agent working in the repo knows the atlas exists and when to consult it.
 
 Write atlas content in the target project's dominant documentation language (Chinese-first when its docs are mostly Chinese; English when they are mostly English). Keep structural tokens (evidence grades, table headers from the templates) in English so they stay greppable either way.
@@ -41,15 +44,29 @@ A fourth mode, **lookup**, is read-only: answer the question from the existing a
 
 ## The completion engine
 
-Run these seven steps for every entry; the entries differ only in how seeds are chosen (a user-named symbol; symbols hit by `git diff`; entry points for full generation).
+Run these eight steps for every entry; the entries differ only in how seeds are chosen (a user-named symbol; symbols hit by `git diff`; entry points for full generation).
 
 1. **Locate the seed.** Find the file and line of the seed symbol (grep; tree-sitter or ctags when available). If the seed cannot be found, say so and stop; never guess a location.
 2. **Read the seed's source** and record card facts: file:line, kind, module, what it calls, what calls it.
 3. **Trace d=1 edges.** For each caller and callee, record the edge with an evidence grade (below). Never record a file:line you have not read this run; grade the edge `[inferred]` instead.
 4. **Apply EXPAND / STOP** (below) to decide whether one more ring is worth mapping.
 5. **Repeat ring by ring** until a STOP condition holds. Ring d means calls at d hops from the seed.
-6. **Write back** to the affected atlas files from the templates: cards to `symbols.md` (or the module file), flows to `processes.md`, dependency rows to `impact.md`, freshness stamps to `INDEX.md`. Stamp every written card with the commit this completion runs against.
-7. **Run the quality gate**, then write `completion-report.md` (replacing the previous one). Update the AGENTS.md block only when the atlas layout changed.
+6. **Write back** to the affected atlas files from the templates: cards to `symbols.md` (or the module file), flows to `processes.md`, dependency rows to `impact.md`, freshness stamps to `INDEX.md`, and Mermaid sources plus manifest rows to `visuals/` and `visuals.md`. Stamp every written card and visual row with the commit this completion runs against.
+7. **Preview and export every affected visual.** Render each affected `visuals/<name>.mmd` with an available Mermaid-capable renderer or browser. Inspect the rendered preview for syntax errors, clipped labels, unreadable text, and misleading edges. A successful preview must immediately be exported to the paired `images/<name>.png`; preview success without that PNG is a failed completion. Render to temporary files first and replace the committed source, PNG, and manifest row only after both preview and export succeed. If rendering is unavailable or either step fails, report the blocker, keep the last successful artifacts intact, and do not write a successful completion report.
+8. **Run the quality gate**, then write `completion-report.md` (replacing the previous one). Update the AGENTS.md block only when the atlas layout changed.
+
+## Visual artifacts
+
+Every completion that writes atlas content must create or refresh at least one visual for the affected scope. Lookup is read-only and does not render or export anything.
+
+- For a named execution flow, render the critical path from trigger to outcome.
+- For a symbol or region without a named flow, render its d=1 dependency and dependent edges.
+- For full generation, render the system overview and the most important named flows within the agreed symbol budget.
+- For incremental update, refresh every existing visual whose covered flow, symbol, or region changed; create one when the changed scope has no visual yet.
+
+Markdown cards, flows, and impact rows remain the source of truth. A visual summarizes those facts and must not introduce an edge, boundary, or risk claim that the Markdown does not support. Keep one Mermaid source and one PNG export per visual, with identical kebab-case basenames. `visuals.md` is the authoritative manifest and links each pair back to the Markdown scope it summarizes.
+
+Preview is a mandatory gate, not an optional presentation step. Use an available Mermaid-capable renderer or browser, inspect the rendered result, then export that exact successful preview as PNG. Do not treat Mermaid syntax validation alone as a successful preview. Do not create placeholder images or hand-edit exported PNGs.
 
 ## EXPAND / STOP
 
@@ -101,10 +118,11 @@ Before writing the completion report:
 
 1. Every `[verified]` edge cites a file:line actually read during this run.
 2. Spot-check 3 new edges: re-read their cited lines. Any mismatch, or any cited line you cannot account for having read, fails the gate.
-3. The completion report's counts match the files as written: count the cards, flows, and impact rows you actually wrote (grep the headings), never from memory.
-4. On failure, fix the entries and re-run the check. Never lower a grade to pass the gate.
+3. The completion report's counts match the files as written: count the cards, flows, impact rows, previewed Mermaid sources, and paired PNG exports you actually wrote, never from memory.
+4. Every affected visual was previewed successfully, has a non-empty paired PNG with the same basename, and has one manifest row in `visuals.md`. A preview that was not exported fails the gate.
+5. On failure, fix the entries and re-run the check. Never lower a grade, omit a visual, or claim a successful preview to pass the gate.
 
-The bundled [validate.sh](./validate.sh) checks the structural half mechanically: `bash <this-skill-folder>/validate.sh <atlas-dir> <project-root>`. It fails on breakage (missing files, altered table headers, malformed evidence grades, step numbering, receipt fields), warns on template leakage, and prints the authoritative card/flow/row counts; take item 3's numbers from its output. Where bash is unavailable, run the checks by hand.
+The bundled [validate.sh](./validate.sh) checks the structural half mechanically: `bash <this-skill-folder>/validate.sh <atlas-dir> <project-root>`. It fails on breakage (missing files, altered table headers, malformed evidence grades, step numbering, receipt fields, missing visual pairs, or invalid PNG signatures), warns on template leakage, and prints the authoritative card/flow/row/visual counts; take the completion report's numbers from its output. Where bash is unavailable, run the checks by hand, including the same manifest, one-to-one pairing, and PNG signature checks.
 
 ## AGENTS.md registration
 
@@ -120,4 +138,5 @@ Write every atlas file from these templates; keep the table headers verbatim so 
 - [templates/symbols.md](./templates/symbols.md): symbol cards with evidence grades
 - [templates/impact.md](./templates/impact.md): dependency rings, risk levels, update order
 - [templates/completion-report.md](./templates/completion-report.md): receipt of the latest run
+- [templates/visuals.md](./templates/visuals.md): preview/export manifest
 - [templates/agents-block.md](./templates/agents-block.md): the AGENTS.md registration block
