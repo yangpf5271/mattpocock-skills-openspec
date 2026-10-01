@@ -7,7 +7,7 @@ description: 报错/卡住/变慢时排查：Diagnosis loop for hard bugs and pe
 
 A discipline for hard bugs. Skip phases only when explicitly justified.
 
-When exploring the codebase, read `CONTEXT.md` (if it exists) to get a clear mental model of the relevant modules, and check ADRs in the area you're touching.
+When exploring the codebase, read `GLOSSARY.md` (if it exists) to get a clear mental model of the relevant modules, and check ADRs in the area you're touching.
 
 If the repo keeps a codebase atlas (`docs/atlas/`; see `/codebase-atlas`), trace execution through its `processes.md` and `symbols.md` before ad-hoc grepping. Refresh a stale region with targeted completion rather than trusting an old map.
 
