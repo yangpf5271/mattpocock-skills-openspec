@@ -95,7 +95,7 @@ openspec status --change "<name>"
 Tell the user:
 - The change name and location (`openspec/changes/<name>/`).
 - Which artifacts were created, one line each.
-- That `tasks.md` is the OpenSpec implementation checklist: `/implement` can work it directly, or `/to-tickets` can promote each vertical slice into a tracker ticket by adding ticket-specific fields.
+- That `tasks.md` is the OpenSpec implementation checklist: `/implement` can work it directly, or `/to-tickets` can promote each vertical slice into a tracker ticket by adding ticket-specific fields. For a whole-spec build in one run, `/implement-spec` can drive the promoted tickets as a task graph; it checks `tasks.md` off as part of its close-out.
 - That the change is ready to implement: tasks can be worked by `/implement` (check each `- [ ]` off as it lands), and when all tasks are done, `/archive-proposal` delegates the merge-and-file to `openspec archive`, syncing the delta into `openspec/specs/` and filing the change under `openspec/changes/archive/`.
 
 ## Guardrails

@@ -34,7 +34,7 @@ It leads each section with the recommended answer, and skips whatever exploratio
 | --- | --- | --- |
 | **Issue tracker** | the one matching your `git remote` | always: this is the one real choice |
 | **Triage labels** | keep the five canonical names (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`) | only if the `triage` skill is installed |
-| **Domain docs** | single-context: one `CONTEXT.md` plus `docs/adr/` at the root | only if it spots monorepo signals, and then it offers a multi-context `CONTEXT-MAP.md` |
+| **Domain docs** | single-context: one `GLOSSARY.md` plus `docs/adr/` at the root | only if it spots monorepo signals, and then it offers a multi-context `GLOSSARY-MAP.md` |
 | **OpenSpec** | use the repo-root `openspec/` instance with the standard `spec-driven` schema | only when the OpenSpec lifecycle skills are installed; installation and initialization require confirmation |
 
 | **Domain docs** | single-context: one `GLOSSARY.md` plus `docs/adr/` at the root | only if it spots monorepo signals, and then it offers a multi-context `GLOSSARY-MAP.md` |

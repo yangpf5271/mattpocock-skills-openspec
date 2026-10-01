@@ -24,9 +24,9 @@ The body reuses the leading words already in your global `CLAUDE.md` and your pr
 
 ## Common questions
 
-**What if the repo has no `CONTEXT.md`?**
+**What if the repo has no `GLOSSARY.md`?**
 
-The skill still works. You lose only the project-vocabulary half; the agent can still back up, supply the missing premise, and explain in plain English. If the repo has a `CONTEXT-MAP.md`, the agent follows it to the context-specific `CONTEXT.md` for the area at hand.
+The skill still works. You lose only the project-vocabulary half; the agent can still back up, supply the missing premise, and explain in plain English. If the repo has a `GLOSSARY-MAP.md`, the agent follows it to the context-specific `GLOSSARY.md` for the area at hand.
 
 **Is this a standing instruction to make every answer shorter?**
 

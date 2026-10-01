@@ -1,6 +1,6 @@
 ---
 name: implement-spec
-description: "Implement the result of /to-spec and /to-tickets in code."
+description: "整份规格一次实现时：Implement the result of /to-spec and /to-tickets in code."
 disable-model-invocation: true
 ---
 
@@ -35,6 +35,8 @@ Communication to and from subagents should be sparse. Communicate primarily thro
 
 7. Once all tickets are complete, call the Skill tool with `code-review` on the integration branch. Fix all issues raised by the code review in a single **implementer subagent**.
 
-8. If a draft PR exists, mark it ready for review. Otherwise, resolve each ticket the way the issue tracker closes work, and report the integration branch.
+8. If the tickets came from an OpenSpec change (`openspec/changes/<name>/tasks.md` exists), sync the OpenSpec record before closing out: check off every `- [ ]` line whose slice landed, and when `/to-tickets` promoted the groups, confirm each one's `**Ticket:**` backlink is present. `openspec archive` reads **only** `tasks.md`, so an unchecked line will make `/archive-proposal` report incomplete work even with every ticket resolved.
 
-9. Clean up all **implementer subagent** worktrees.
+9. If a draft PR exists, mark it ready for review. Otherwise, resolve each ticket the way the issue tracker closes work, and report the integration branch.
+
+10. Clean up all **implementer subagent** worktrees.
