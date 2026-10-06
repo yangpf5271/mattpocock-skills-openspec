@@ -7,14 +7,13 @@ disable-model-invocation: true
 Implement the work described by the user in the spec or tickets.
 
 If the repo keeps a codebase atlas (`docs/atlas/`; see `/codebase-atlas`) covering a region this work touches, read those pages before coding. If a touched region is unmapped or stale and the change is non-trivial, run `/codebase-atlas` targeted completion on it first. After committing, refresh the touched region's map (incremental update).
-
-Use /tdd where possible, at pre-agreed seams.
+Call the Skill tool with "tdd" where possible, at pre-agreed seams.
 
 Keep the documents truthful in the same change. When the work renames or removes a term, command, or field that any document references, update every reference now and leave a mechanical guard (a test or a grep assertion) so the old name cannot silently return; when a document promises behavior, the test proving it lands in the same change.
 
 Run typechecking regularly, single test files regularly, and the full test suite once at the end.
 
-Once done, use /code-review to review the work.
+Once done, call the Skill tool with "code-review" to review the work.
 
 After the review passes, run acceptance before calling the work done. Run the full test suite. If the change touches a UI surface, its spec-scenario journeys need verifying; three ways, take the first that fits unless the user says otherwise:
 
