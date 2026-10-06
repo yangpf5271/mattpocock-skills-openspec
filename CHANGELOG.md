@@ -1,5 +1,27 @@
 # mattpocock-skills-openspec
 
+## 1.3.1
+
+### Patch Changes
+
+- [`e2429de`](https://github.com/yangpf5271/mattpocock-skills-openspec/commit/e2429deecaee7f3c4f9d509c4b230e1c6962a49e) Thanks [@yangpf5271](https://github.com/yangpf5271)! - implement: UI-scenario acceptance grows from two ways to three, taken in order unless the user says otherwise: committed E2E (preferred where infrastructure exists, since the specs re-run as regression), a new agent browser walkthrough (when the harness provides browser automation tools: the agent starts the dev server, walks one route per scenario with a screenshot per step, judges each against the scenario's expected result, and defers look-and-feel calls to the user; nothing is committed, so it verifies this change only), and the manual acceptance route for the user. archive-proposal: walkthrough-verified scenarios count as covered, noted as verified by walkthrough or by hand.
+
+- [`cd0fc2a`](https://github.com/yangpf5271/mattpocock-skills-openspec/commit/cd0fc2a8b0a9d9603eeee8c509d11c31f3058e9e) Thanks [@yangpf5271](https://github.com/yangpf5271)! - codebase-atlas: make visual previews a required completion artifact. Atlas runs now keep Mermaid sources under `visuals/`, export every successfully previewed diagram to a paired PNG under `images/`, register the pair in `visuals.md`, and fail structural validation when sources, exports, manifest rows, or PNG signatures are missing.
+
+- [`0d76147`](https://github.com/yangpf5271/mattpocock-skills-openspec/commit/0d76147c17d9acebf7c95a5ff4536fa3eaaf07b2) Thanks [@yangpf5271](https://github.com/yangpf5271)! - implement: add an acceptance step after code-review; run the full suite, run E2E journeys for UI-touching changes when the repo has browser E2E infrastructure, and never skip silently when the repo has no test infrastructure at all: report the uncovered spec scenarios and ask to scaffold minimal infrastructure or record the gap. archive-proposal: report scenario verification coverage (total/covered/uncovered) in the pre-flight summary without blocking the archive.
+
+- [#1187](https://github.com/mattpocock/skills/pull/1187) [`e0efb6e`](https://github.com/yangpf5271/mattpocock-skills-openspec/commit/e0efb6e7435ebb420d8a25d6816ed1ebaa2d23d2) Thanks [@mattpocock](https://github.com/mattpocock)! - Fixed the GitHub tracker template's external-PR listing, which failed on `authorAssociation` ([#468](https://github.com/yangpf5271/mattpocock-skills-openspec/issues/468), thanks @lofi-coding). Re-run `/setup-matt-pocock-skills` to refresh `docs/agents/issue-tracker.md`.
+
+- [#1184](https://github.com/mattpocock/skills/pull/1184) [`4f4e943`](https://github.com/yangpf5271/mattpocock-skills-openspec/commit/4f4e9433bbb7c4957ef33b1ea26686fb7c2a4cf4) Thanks [@mattpocock](https://github.com/mattpocock)! - `handoff` now names where the OS temp directory is (`$TMPDIR`, else `/tmp`; `%TEMP%` on Windows), so agents stop guessing ([#272](https://github.com/yangpf5271/mattpocock-skills-openspec/issues/272)).
+
+- [#1189](https://github.com/mattpocock/skills/pull/1189) [`e48341a`](https://github.com/yangpf5271/mattpocock-skills-openspec/commit/e48341a3d412cfeba4b9a79d3fd0331fc376ba82) Thanks [@mattpocock](https://github.com/mattpocock)! - `implement` now calls the Skill tool for `tdd` and `code-review` instead of bare `/skill` prose, matching [#878](https://github.com/yangpf5271/mattpocock-skills-openspec/issues/878).
+
+- [`b710ad9`](https://github.com/yangpf5271/mattpocock-skills-openspec/commit/b710ad9fafe41bb92a02cafd3d823b78e0b5f1d9) Thanks [@yangpf5271](https://github.com/yangpf5271)! - implement: UI-scenario acceptance becomes a two-way choice, automated browser E2E when the repo has the infrastructure, or a manual acceptance route: one numbered walkthrough per spec scenario (page, action, expected observable result) the user clicks through and reports pass or fail on, failures returning as bug reports. Manual route is the default substitute when no infrastructure exists, a scenario needs human judgment of look and feel, or the user asks. archive-proposal: user-confirmed walkthrough scenarios count as covered, noted as verified by hand.
+
+- [`2e205ea`](https://github.com/yangpf5271/mattpocock-skills-openspec/commit/2e205ea508e600639a45ab33ef8d761f7539c56d) Thanks [@yangpf5271](https://github.com/yangpf5271)! - archive-proposal: quote the `description` in `SKILL.md` frontmatter. It contained a `: ` sequence, which made the frontmatter invalid YAML, so skill discovery could skip the skill. Introduced when an em-dash cleanup replaced the dash before "check" with a colon.
+
+- [#1188](https://github.com/mattpocock/skills/pull/1188) [`cffab50`](https://github.com/yangpf5271/mattpocock-skills-openspec/commit/cffab50350e3d96688f63f890f4d7ca0e6007cfe) Thanks [@mattpocock](https://github.com/mattpocock)! - `to-tickets` makes each ticket a sub-issue of its source issue (the GitHub tracker template now gives the command), and omits `## Blocked by` when blockers are native edges. Re-run `/setup-matt-pocock-skills` to refresh `docs/agents/issue-tracker.md`. Thanks @richardwhatever ([#554](https://github.com/yangpf5271/mattpocock-skills-openspec/issues/554)) and @adamslowe ([#262](https://github.com/yangpf5271/mattpocock-skills-openspec/issues/262)).
+
 ## 1.3.0
 
 ### Minor Changes
