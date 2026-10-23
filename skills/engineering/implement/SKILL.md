@@ -7,6 +7,7 @@ disable-model-invocation: true
 Implement the work described by the user in the spec or tickets.
 
 If the repo keeps a codebase atlas (`docs/atlas/`; see `/codebase-atlas`) covering a region this work touches, read those pages before coding. If a touched region is unmapped or stale and the change is non-trivial, run `/codebase-atlas` targeted completion on it first. After committing, refresh the touched region's map (incremental update).
+If the user passes a ticket reference, fetch it from the issue tracker and state its title before starting. If the reference is ambiguous, ask.
 Call the Skill tool with "tdd" where possible, at pre-agreed seams.
 
 Keep the documents truthful in the same change. When the work renames or removes a term, command, or field that any document references, update every reference now and leave a mechanical guard (a test or a grep assertion) so the old name cannot silently return; when a document promises behavior, the test proving it lands in the same change.

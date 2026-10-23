@@ -12,7 +12,7 @@ This OpenSpec-enabled fork is distributed through [skills.sh](https://skills.sh/
 npx skills@latest add yangpf5271/mattpocock-skills-openspec
 ```
 
-Pick the skills you want, and which coding agents to install them on. **The installer lets you choose which skills to take: make sure `setup-matt-pocock-skills` is one of them.**
+Updates itself at startup.
 
 </canonical-block>
 
@@ -31,6 +31,7 @@ npx skills@latest update <name>
 </canonical-block>
 
 Pages under `docs/` do not carry these commands: ai-hero renders the install widget above the body. See [writing-docs.md](./writing-docs.md).
+`skills@latest` is the pinned spelling everywhere.
 
 ## Official upstream Claude plugin
 

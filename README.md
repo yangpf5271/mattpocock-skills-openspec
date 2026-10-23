@@ -45,7 +45,7 @@ It's in Claude Code's official marketplace, so there's nothing to add first. Upd
 ```bash
 claude plugin uninstall mattpocock-skills@claude-plugins-official
 claude plugin marketplace add yangpf5271/mattpocock-skills-openspec
-claude plugin install mattpocock-skills@mattpocock
+claude plugin install mattpocock-skills-openspec@yangpf5271
 ```
 
 </details>
@@ -54,7 +54,7 @@ claude plugin install mattpocock-skills@mattpocock
 <summary><strong>Official upstream Claude plugin (without this fork's OpenSpec additions)</strong></summary>
 
 ```bash
-claude plugins install mattpocock-skills
+claude plugin install mattpocock-skills@claude-plugins-official
 ```
 
 Or, from inside a session:
@@ -68,9 +68,7 @@ This installs Matt Pocock's official marketplace version, which is available wit
 </details>
 
 <details>
-<summary><strong>For tinkerers</strong></summary>
-
-Use the same installer, on any agent, including Claude Code:
+<summary><strong>GitHub Copilot</strong> (CLI and VS Code)</summary>
 
 ```bash
 npx skills@latest add yangpf5271/mattpocock-skills-openspec
