@@ -29,4 +29,6 @@ Finding _facts_ is your job, never the user's. When a frontier question needs a 
 
 A premise the user states is also a fact. When a decision rests on a claim about what already exists ("already in place", "the system supports that today", "phase one shipped it"), treat the claim as something to check, not as given: verify it against the codebase or environment before the decision lands. A premise that fails is a new question on the frontier; a premise nothing available can verify is marked as unverified and never built on silently.
 
+Changing the middle of an existing flow owns the exit as well as the entry. Enumerate what the changed behavior feeds out to: probe the code for its downstream consumers, and put a contract question on the frontier for each - does its assumption still hold under the new behavior, or does it need retrofitting? Each consumer's joint ends up as a scenario, so what gets built and accepted walks the whole flow instead of the middle alone; a tail left silent is the gap this rule closes.
+
 The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Do not act on it until the user confirms you have reached a shared understanding.

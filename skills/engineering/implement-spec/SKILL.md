@@ -29,7 +29,7 @@ Communication to and from subagents should be sparse. Communicate primarily thro
 4. Use a fresh **implementer subagent** for each ticket, each in its own worktree on its own branch. Each implementer subagent:
    - confirms its worktree is based on the integration branch before starting, and resets onto it if not;
    - calls the Skill tool with `tdd` to build the ticket;
-   - reports back instead of improvising when the code contradicts what the ticket assumes already exists, so the affected tickets stop and the conflict returns to the spec;
+   - reports back instead of improvising when the code contradicts what the ticket assumes already exists; the orchestrator stops the affected tickets, pauses any running tickets that share the same premise, and returns the conflict to the spec;
    - merges the integration branch tip into its own branch before reporting done
 
 5. Once an **implementer subagent** completes, merge its work to the integration branch with a **merger subagent**.

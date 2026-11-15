@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 Implement the work described by the user in the spec or tickets.
 
-Before coding, check the spec's assumptions about what already exists (claims like "already in place" or "this phase only adjusts X"). A premise that does not hold stops the work: take it back to the spec for a small clarifying round instead of improvising around it.
+Before coding, check the spec's assumptions about what already exists (claims like "already in place" or "this phase only adjusts X"). A premise that does not hold stops the work: take it back to the spec for a small clarifying round instead of improvising around it. The same holds when the changed behavior feeds existing logic the spec never mentions: that silence is a gap, so stop and clarify the closure before bridging it in code.
 
 If the repo keeps a codebase atlas (`docs/atlas/`; see `/codebase-atlas`) covering a region this work touches, read those pages before coding. If a touched region is unmapped or stale and the change is non-trivial, run `/codebase-atlas` targeted completion on it first. After committing, refresh the touched region's map (incremental update).
 
